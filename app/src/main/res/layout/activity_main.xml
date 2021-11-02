@@ -39,6 +39,7 @@
             android:rowCount="3">
 
             <ImageButton
+                android:id="@+id/btnRegistroAcopio"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_row="0"
@@ -52,6 +53,7 @@
                 app:srcCompat="@drawable/acopio_icono" />
 
             <ImageButton
+                android:id="@+id/btnSubirDatos"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_row="0"
@@ -61,10 +63,11 @@
                 android:layout_gravity="fill"
                 android:layout_margin="10dp"
                 android:backgroundTint="#FFF"
-                android:clickable="true"
-                app:srcCompat="@drawable/productores_icono" />
+                android:clickable="false"
+                app:srcCompat="@drawable/email_icono" />
 
             <ImageButton
+                android:id="@+id/btnConfiguracion"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_row="1"
@@ -75,9 +78,10 @@
                 android:layout_margin="10dp"
                 android:backgroundTint="#FFF"
                 android:clickable="false"
-                app:srcCompat="@drawable/accesousuarios_icono" />
+                app:srcCompat="@drawable/configuracion_icono" />
 
             <ImageButton
+                android:id="@+id/btnBajarDatos"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_row="1"
@@ -87,8 +91,8 @@
                 android:layout_gravity="fill"
                 android:layout_margin="10dp"
                 android:backgroundTint="#FFF"
-                android:clickable="true"
-                app:srcCompat="@drawable/configuracion_icono" />
+                android:clickable="false"
+                app:srcCompat="@drawable/telefono_icono" />
         </GridLayout>
 
     </LinearLayout>

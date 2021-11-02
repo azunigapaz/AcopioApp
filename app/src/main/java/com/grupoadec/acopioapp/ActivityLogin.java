@@ -182,7 +182,7 @@ public class ActivityLogin extends AppCompatActivity {
 
             SQLiteDatabase db = conexion.getReadableDatabase();
 
-            Cursor objectCursor = db.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioCorreo = '"+ ls_correologin + "' AND UsuarioContrasenia = '" + encriptedPass + "'" , null);
+            Cursor objectCursor = db.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioCorreo = '"+ ls_correologin + "' AND UsuarioContrasenia = '" + encriptedPass + "' AND UsuarioEstado = 1" , null);
             Intent objectIntent=new Intent(getApplicationContext(),MainActivity.class);
 
             if(objectCursor.getCount()!=0){
@@ -192,16 +192,21 @@ public class ActivityLogin extends AppCompatActivity {
                     objectIntent.putExtra("iPeApellidos", objectCursor.getString(2));
                     objectIntent.putExtra("iPeTelefono", objectCursor.getString(3));
                     objectIntent.putExtra("iPeCorreo", objectCursor.getString(4));
-                    objectIntent.putExtra("iPeNuevoRegistro", objectCursor.getInt(6));
+                    objectIntent.putExtra("iPeNuevoRegistro", objectCursor.getString(6));
+                    objectIntent.putExtra("iPeAccesoConfiguracion", objectCursor.getString(7));
+                    objectIntent.putExtra("iPeAccesoBajarDatos", objectCursor.getString(8));
+                    objectIntent.putExtra("iPeAccesoSubirDatos", objectCursor.getString(9));
+                    objectIntent.putExtra("iPeAccesoRegistroProductores", objectCursor.getString(10));
+                    objectIntent.putExtra("iPeAccesoRegistroAcopio", objectCursor.getString(11));
                 }
 
-                progressDialog.dismiss();
-
                 startActivity(objectIntent);
+
+                progressDialog.dismiss();
                 finish();
 
             }else{
-                Toast.makeText(getApplicationContext(),"El correo y contrasenia no existen",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"El usuario no existe o esta inactivo",Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
             }
 

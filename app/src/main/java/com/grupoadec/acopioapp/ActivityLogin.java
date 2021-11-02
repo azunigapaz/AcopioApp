@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,26 +21,32 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
+import com.grupoadec.acopioapp.Configuracion.Transacciones;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ActivityLogin extends AppCompatActivity {
 
     // declaracion de variables
+    SQLiteConexion conexion;
+
     EditText correologin_input, passwordlogin_input;
     TextView btnlogin;
     TextView txtactivityregistro;
 
     ProgressDialog progressDialog;
-    //ProgressBar progressBar;
 
     RequestQueue requestQueue;
 
-    String HttpURI = "http://192.168.68.105/ApiSaeAppAcopio/assets/php/apiusuarios.php";
+    String HttpURI = "http://192.168.68.106/ApiSaeAppAcopio/assets/php/apiusuarios.php";
 
     String ls_correologin;
     String ls_passwordlogin;
@@ -48,37 +56,48 @@ public class ActivityLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Se inicializan las variables
-        correologin_input = (EditText) findViewById(R.id.correologin_input);
-        passwordlogin_input = (EditText) findViewById(R.id.passwordlogin_input);
-        btnlogin = (TextView) findViewById(R.id.btnlogin);
+        try{
+            // Se inicializan las variables
+            conexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
 
-        txtactivityregistro = (TextView) findViewById(R.id.txtactivityregistro);
+            correologin_input = (EditText) findViewById(R.id.correologin_input);
+            passwordlogin_input = (EditText) findViewById(R.id.passwordlogin_input);
+            btnlogin = (TextView) findViewById(R.id.btnlogin);
 
-        // inicializamos requestQueue
-        requestQueue = Volley.newRequestQueue(this);
+            txtactivityregistro = (TextView) findViewById(R.id.txtactivityregistro);
 
-        // inicializamos el progress bar
-        progressDialog = new ProgressDialog(this);
+            // inicializamos requestQueue
+            requestQueue = Volley.newRequestQueue(this);
+
+            // inicializamos el progress bar
+            progressDialog = new ProgressDialog(this);
 
 
-        // evento click del TextView registro
-        txtactivityregistro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),ActivityRegistro.class);
-                startActivity(intent);
-            }
-        });
+            // evento click del TextView registro
+            txtactivityregistro.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(),ActivityRegistro.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
 
-        // evento click del boton iniciar sesion
-        btnlogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Login();
-            }
-        });
-
+            // evento click del boton iniciar sesion
+            btnlogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Login();
+                    try {
+                        LoginSqlite();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void Login() {
@@ -113,6 +132,7 @@ public class ActivityLogin extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(),mensaje,Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 }
 
                             }catch (JSONException ex){
@@ -145,4 +165,47 @@ public class ActivityLogin extends AppCompatActivity {
             requestQueue.add(stringRequest);
         }
     }
+
+    private void LoginSqlite() throws NoSuchAlgorithmException {
+        ls_correologin = correologin_input.getText().toString();
+        ls_passwordlogin = passwordlogin_input.getText().toString();
+
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        md.update(ls_passwordlogin.getBytes(), 0 , ls_passwordlogin.length());
+        String encriptedPass = new BigInteger(1, md.digest()).toString(16);
+
+        if(ls_correologin.isEmpty() || ls_passwordlogin.isEmpty()){
+            Toast.makeText(getApplicationContext(),"El correo y password, no pueden estar vacios",Toast.LENGTH_LONG).show();
+        }else{
+            progressDialog.setMessage("Procesando...");
+            progressDialog.show();
+
+            SQLiteDatabase db = conexion.getReadableDatabase();
+
+            Cursor objectCursor = db.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioCorreo = '"+ ls_correologin + "' AND UsuarioContrasenia = '" + encriptedPass + "'" , null);
+            Intent objectIntent=new Intent(getApplicationContext(),MainActivity.class);
+
+            if(objectCursor.getCount()!=0){
+                while (objectCursor.moveToNext()){
+                    Toast.makeText(getApplicationContext(),"Bienvenido " + objectCursor.getString(1) + " " + objectCursor.getString(2),Toast.LENGTH_LONG).show();
+                    objectIntent.putExtra("iPeNombres", objectCursor.getString(1));
+                    objectIntent.putExtra("iPeApellidos", objectCursor.getString(2));
+                    objectIntent.putExtra("iPeTelefono", objectCursor.getString(3));
+                    objectIntent.putExtra("iPeCorreo", objectCursor.getString(4));
+                    objectIntent.putExtra("iPeNuevoRegistro", objectCursor.getInt(6));
+                }
+
+                progressDialog.dismiss();
+
+                startActivity(objectIntent);
+                finish();
+
+            }else{
+                Toast.makeText(getApplicationContext(),"El correo y contrasenia no existen",Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+
+        }
+    }
+
 }

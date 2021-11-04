@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
-    String HttpURI = "http://192.168.68.106/ApiSaeAppAcopio/assets/php/apicrud.php";
+    String HttpURI = "http://192.168.68.104/ApiSaeAppAcopio/assets/php/apicrud.php";
 
     SQLiteConexion objectSqLiteConexion;
 
@@ -219,9 +219,6 @@ public class MainActivity extends AppCompatActivity {
     private void BajarDatos() {
         try{
             // bajar datos de usuarios
-            // Mostramos el progressDialog
-            progressDialog.setMessage("Procesando...");
-            progressDialog.show();
             // creamos la cadena que se enviara al webservice
             StringRequest stringRequestBajarUsuarios = new StringRequest(Request.Method.POST, HttpURI,
                     new Response.Listener<String>() {
@@ -229,6 +226,9 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(String serverResponse) {
                             // recibimos la respuesta del web services
                             try{
+                                // Mostramos el progressDialog
+                                progressDialog.setMessage("Procesando...");
+                                progressDialog.show();
 
                                 JSONObject jsonObject = new JSONObject(serverResponse);
                                 JSONArray objectJsonArrayTablaUsuarios = jsonObject.getJSONArray("tablausuarios");
@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                                         long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablausuarios, Transacciones.UsuarioId, objectContentValuesInsertUsuarios);
 
                                         if(checkIfQueryRuns!=-1){
-                                            Toast.makeText(getApplicationContext(), "Usuario almacenado en la DB", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(getApplicationContext(), "Usuario almacenado en la DB", Toast.LENGTH_SHORT).show();
                                         }else {
                                             Toast.makeText(getApplicationContext(), "No se almaceno el usuario en la DB", Toast.LENGTH_SHORT).show();
                                         }
@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobtenerusuario");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "Usuarios actualizados", Toast.LENGTH_SHORT).show();
 
                             }catch (JSONException ex){
                                 ex.printStackTrace();
@@ -344,14 +344,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            // ejecutamos la cadena
+            // ejecutamos la cadena(enviamos la peticion)
             requestQueue.add(stringRequestBajarUsuarios);
 
-
             // Bajar datos de proveedores
-            // Mostramos el progressDialog
-            progressDialog.setMessage("Procesando...");
-            progressDialog.show();
             // creamos la cadena que se enviara al webservice
             StringRequest stringRequestBajarProveedores = new StringRequest(Request.Method.POST, HttpURI,
                     new Response.Listener<String>() {
@@ -366,13 +362,20 @@ public class MainActivity extends AppCompatActivity {
                                 SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
 
                                 Cursor objectCursor;
-                                String lsproveedorClave,lsproveedorNombre,lsproveedorRtn,lsproveedorCalle,lsproveedorCruzamiento,lsproveedorLocalidad,lsproveedorMunicipio,lsproveedorTelefon,lsproveedorSaldo;
+                                String lsproveedorClave,lsproveedorNombre,lsproveedorRtn,lsproveedorCalle,lsproveedorCruzamiento,lsproveedorLocalidad,lsproveedorMunicipio,lsproveedorTelefono,lsproveedorSaldo;
                                 String consultaSql;
 
                                 for(int i = 0; i < objectJsonArrayTablaProveedores.length(); i++){
                                     JSONObject objectJsonProveedores = objectJsonArrayTablaProveedores.getJSONObject(i);
                                     lsproveedorClave = objectJsonProveedores.getString("CLAVE");
                                     lsproveedorNombre = objectJsonProveedores.getString("NOMBRE");
+                                    lsproveedorRtn = objectJsonProveedores.getString("RFC");
+                                    lsproveedorCalle = objectJsonProveedores.getString("CALLE");
+                                    lsproveedorCruzamiento = objectJsonProveedores.getString("CRUZAMIENTOS");
+                                    lsproveedorLocalidad = objectJsonProveedores.getString("LOCALIDAD");
+                                    lsproveedorMunicipio = objectJsonProveedores.getString("MUNICIPIO");
+                                    lsproveedorTelefono = objectJsonProveedores.getString("TELEFONO");
+                                    lsproveedorSaldo = objectJsonProveedores.getString("SALDO");
 
 
                                     consultaSql = "SELECT * FROM tblproveedores WHERE ProveedorClave = '" + lsproveedorClave + "'";
@@ -384,19 +387,33 @@ public class MainActivity extends AppCompatActivity {
                                         String [] parametroWhere = { lsproveedorClave };
                                         ContentValues objectContentValuesUpdateProveedores = new ContentValues();
                                         objectContentValuesUpdateProveedores.put(Transacciones.ProveedorNombre, lsproveedorNombre);
-
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorRtn, lsproveedorRtn);
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorCalle, lsproveedorCalle);
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorCruzamiento, lsproveedorCruzamiento);
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorLocalidad, lsproveedorLocalidad);
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorMunicipio, lsproveedorMunicipio);
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorTelefono, lsproveedorTelefono);
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorSaldo, lsproveedorSaldo);
 
                                         objectSqLiteDatabase.update(Transacciones.tablaproveedores,objectContentValuesUpdateProveedores,Transacciones.ProveedorClave + "=?", parametroWhere);
 
                                     }else{
                                         // si el registro no existe en el movil, lo insertamos
                                         ContentValues objectContentValuesInsertProveedores = new ContentValues();
-                                        objectContentValuesInsertProveedores.put(Transacciones.UsuarioNombre, lsproveedorNombre);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorClave, lsproveedorClave);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorNombre, lsproveedorNombre);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorRtn, lsproveedorRtn);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorCalle, lsproveedorCalle);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorCruzamiento, lsproveedorCruzamiento);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorLocalidad, lsproveedorLocalidad);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorMunicipio, lsproveedorMunicipio);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorTelefono, lsproveedorTelefono);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorSaldo, lsproveedorSaldo);
 
-                                        long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablausuarios, null, objectContentValuesInsertProveedores);
+                                        long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablaproveedores, null, objectContentValuesInsertProveedores);
 
                                         if(checkIfQueryRuns!=-1){
-                                            Toast.makeText(getApplicationContext(), "Proveedor almacenado en la DB", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(getApplicationContext(), "Proveedor almacenado en la DB", Toast.LENGTH_SHORT).show();
                                         }else {
                                             Toast.makeText(getApplicationContext(), "No se almaceno el Proveedor en la DB", Toast.LENGTH_SHORT).show();
                                         }
@@ -414,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobtenerproductores");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "Productores actualizados", Toast.LENGTH_SHORT).show();
 
                             }catch (JSONException ex){
                                 ex.printStackTrace();
@@ -445,6 +462,203 @@ public class MainActivity extends AppCompatActivity {
             // ejecutamos la cadena
             requestQueue.add(stringRequestBajarProveedores);
 
+
+            // Bajar datos de productos
+            // creamos la cadena que se enviara al webservice
+            StringRequest stringRequestBajarProductos = new StringRequest(Request.Method.POST, HttpURI,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String serverResponse) {
+                            // recibimos la respuesta del web services
+                            try{
+
+                                JSONObject jsonObject = new JSONObject(serverResponse);
+                                JSONArray objectJsonArrayTablaProductos = jsonObject.getJSONArray("tablaproductos");
+
+                                SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
+
+                                Cursor objectCursor;
+                                String lsproductoClave,lsproductoDescripcion,lsproductoCosto,lsproductoLinea;
+                                String consultaSql;
+
+                                for(int i = 0; i < objectJsonArrayTablaProductos.length(); i++){
+                                    JSONObject objectJsonProductos = objectJsonArrayTablaProductos.getJSONObject(i);
+                                    lsproductoClave = objectJsonProductos.getString("CVE_ART");
+                                    lsproductoDescripcion = objectJsonProductos.getString("DESCR");
+                                    lsproductoCosto = objectJsonProductos.getString("ULT_COSTO");
+                                    lsproductoLinea = objectJsonProductos.getString("LIN_PROD");
+
+                                    consultaSql = "SELECT * FROM tblproductos WHERE ProductoClave = '" + lsproductoClave + "'";
+
+                                    objectCursor = objectSqLiteDatabase.rawQuery(consultaSql, null);
+
+                                    if(objectCursor.moveToNext()){
+                                        // si el registro existe en el movil, lo actualizamos
+                                        String [] parametroWhere = { lsproductoClave };
+                                        ContentValues objectContentValuesUpdateProductos = new ContentValues();
+                                        objectContentValuesUpdateProductos.put(Transacciones.ProductoDescripcion, lsproductoDescripcion);
+                                        objectContentValuesUpdateProductos.put(Transacciones.ProductoCosto, lsproductoCosto);
+                                        objectContentValuesUpdateProductos.put(Transacciones.ProductoLinea, lsproductoLinea);
+
+                                        objectSqLiteDatabase.update(Transacciones.tablaproductos,objectContentValuesUpdateProductos,Transacciones.ProductoClave + "=?", parametroWhere);
+
+                                    }else{
+                                        // si el registro no existe en el movil, lo insertamos
+                                        ContentValues objectContentValuesInsertProductores = new ContentValues();
+                                        objectContentValuesInsertProductores.put(Transacciones.ProductoClave, lsproductoClave);
+                                        objectContentValuesInsertProductores.put(Transacciones.ProductoDescripcion, lsproductoDescripcion);
+                                        objectContentValuesInsertProductores.put(Transacciones.ProductoCosto, lsproductoCosto);
+                                        objectContentValuesInsertProductores.put(Transacciones.ProductoLinea, lsproductoLinea);
+
+                                        long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablaproductos, null, objectContentValuesInsertProductores);
+
+                                        if(checkIfQueryRuns!=-1){
+                                            //Toast.makeText(getApplicationContext(), "Producto almacenado en la DB", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), "No se almaceno el Producto en la DB", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    // cerramos el cursor
+                                    objectCursor.close();
+                                }
+
+                                // cerramos la conexion
+                                objectSqLiteDatabase.close();
+
+                                // obtenemos las variables declaradas en el webservice
+                                String mensajeApi = jsonObject.getString("mensajeobtenerproductos");
+                                Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(getApplicationContext(), "Productos actualizados", Toast.LENGTH_SHORT).show();
+
+
+                            }catch (JSONException ex){
+                                ex.printStackTrace();
+                                progressDialog.dismiss();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // si hay algun error por parte de la libreria Voley
+                    progressDialog.dismiss();
+                    // mostramos el error de la libreria
+                    Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                }
+            }){
+                // el primer paso es enviar los datos al web services, con sus respectivos parametros
+                // se hace un mapeo de un arreglo de 2 dimesiones
+                protected Map<String,String> getParams(){
+                    Map<String,String> parametros = new HashMap<>();
+                    // parametros que enviaremos al web service
+                    parametros.put("opcion", "obtenerproductos");
+
+                    return parametros;
+                }
+            };
+
+            // ejecutamos la cadena
+            requestQueue.add(stringRequestBajarProductos);
+
+
+            // Bajar datos de almacenes
+            // creamos la cadena que se enviara al webservice
+            StringRequest stringRequestBajarAlmacenes = new StringRequest(Request.Method.POST, HttpURI,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String serverResponse) {
+                            // recibimos la respuesta del web services
+                            try{
+
+                                JSONObject jsonObject = new JSONObject(serverResponse);
+                                JSONArray objectJsonArrayTablaAlmacenes = jsonObject.getJSONArray("tablaalmacenes");
+
+                                SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
+
+                                Cursor objectCursor;
+                                String lsalmacenClave,lsalmacenDescripcion;
+                                String consultaSql;
+
+                                for(int i = 0; i < objectJsonArrayTablaAlmacenes.length(); i++){
+                                    JSONObject objectJsonAlmacenes = objectJsonArrayTablaAlmacenes.getJSONObject(i);
+                                    lsalmacenClave = objectJsonAlmacenes.getString("CVE_ALM");
+                                    lsalmacenDescripcion = objectJsonAlmacenes.getString("DESCR");
+
+                                    consultaSql = "SELECT * FROM tblalmacenes WHERE AlmacenClave = " + lsalmacenClave;
+
+                                    objectCursor = objectSqLiteDatabase.rawQuery(consultaSql, null);
+
+                                    if(objectCursor.moveToNext()){
+                                        // si el registro existe en el movil, lo actualizamos
+                                        String [] parametroWhere = { lsalmacenClave };
+                                        ContentValues objectContentValuesUpdateAlmacenes = new ContentValues();
+                                        objectContentValuesUpdateAlmacenes.put(Transacciones.AlmacenDescripcion, lsalmacenDescripcion);
+
+                                        objectSqLiteDatabase.update(Transacciones.tablaalmacenes,objectContentValuesUpdateAlmacenes,Transacciones.AlmacenClave + "=?", parametroWhere);
+
+                                    }else{
+                                        // si el registro no existe en el movil, lo insertamos
+                                        ContentValues objectContentValuesInsertAlmacenes = new ContentValues();
+                                        objectContentValuesInsertAlmacenes.put(Transacciones.AlmacenClave, lsalmacenClave);
+                                        objectContentValuesInsertAlmacenes.put(Transacciones.AlmacenDescripcion, lsalmacenDescripcion);
+
+                                        long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablaalmacenes, null, objectContentValuesInsertAlmacenes);
+
+                                        if(checkIfQueryRuns!=-1){
+                                            //Toast.makeText(getApplicationContext(), "Almacen almacenado en la DB", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), "No se almaceno el almacen en la DB", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    // cerramos el cursor
+                                    objectCursor.close();
+                                }
+
+                                // cerramos la conexion
+                                objectSqLiteDatabase.close();
+
+                                // obtenemos las variables declaradas en el webservice
+                                String mensajeApi = jsonObject.getString("mensajeobteneralmacenes");
+                                Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(getApplicationContext(), "Almacenes actualizados", Toast.LENGTH_SHORT).show();
+
+                                // ocultamos el progressDialog
+                                progressDialog.dismiss();
+
+                            }catch (JSONException ex){
+                                ex.printStackTrace();
+                                progressDialog.dismiss();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // si hay algun error por parte de la libreria Voley
+                    progressDialog.dismiss();
+                    // mostramos el error de la libreria
+                    Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                }
+            }){
+                // el primer paso es enviar los datos al web services, con sus respectivos parametros
+                // se hace un mapeo de un arreglo de 2 dimesiones
+                protected Map<String,String> getParams(){
+                    Map<String,String> parametros = new HashMap<>();
+                    // parametros que enviaremos al web service
+                    parametros.put("opcion", "obteneralmacenes");
+
+                    return parametros;
+                }
+            };
+
+            // ejecutamos la cadena
+            requestQueue.add(stringRequestBajarAlmacenes);
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();

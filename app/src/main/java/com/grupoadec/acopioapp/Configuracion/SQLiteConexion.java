@@ -32,6 +32,8 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         // Creamos las tablas de la base de datos
         db.execSQL(Transacciones.CreateTableUsuarios);
         db.execSQL(Transacciones.CreateTableProveedores);
+        db.execSQL(Transacciones.CreateTableProductos);
+        db.execSQL(Transacciones.CreateTableAlmacenes);
     }
 
     @Override
@@ -39,6 +41,8 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         // eliminamos las tablas de la base de datos, funcion para limpiar la db
         db.execSQL(Transacciones.DropTableUsuario);
         db.execSQL(Transacciones.DropTableProveedores);
+        db.execSQL(Transacciones.DropTableProductos);
+        db.execSQL(Transacciones.DropTableAlmacenes);
 
         // Cramos nuevamente las tablas
         onCreate(db);

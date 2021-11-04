@@ -48,6 +48,31 @@ public class Transacciones {
             "ProveedorNombre VARCHAR(120), ProveedorRtn VARCHAR(15), ProveedorCalle VARCHAR(80), ProveedorCruzamiento VARCHAR(40)," +
             "ProveedorLocalidad VARCHAR(50), ProveedorMunicipio VARCHAR(50), ProveedorTelefono VARCHAR(25), ProveedorSaldo DECIMAL(18,6))";
 
-    public static final String DropTableProveedores = "DROP TABLE IF EXISTS tblusuarios";
+    public static final String DropTableProveedores = "DROP TABLE IF EXISTS tblproveedores";
+
+    // tabla productos
+    public static String tablaproductos = "tblproductos";
+    // campos de la tabla productos
+    public static String ProductoClave = "ProductoClave";
+    public static String ProductoDescripcion = "ProductoDescripcion";
+    public static String ProductoCosto = "ProductoCosto";
+    public static String ProductoLinea = "ProductoLinea";
+
+    // Transacciones DDL(Data Definition Language)
+    public static final String CreateTableProductos = "CREATE TABLE tblproductos (ProductoClave VARCHAR(16) PRIMARY KEY," +
+            "ProductoDescripcion VARCHAR(40), ProductoCosto DECIMAL(18,6), ProductoLinea VARCHAR(5))";
+
+    public static final String DropTableProductos = "DROP TABLE IF EXISTS tblproductos";
+
+    // tabla almacenes
+    public static String tablaalmacenes = "tblalmacenes";
+    // campos de la tabla almacenes
+    public static String AlmacenClave = "AlmacenClave";
+    public static String AlmacenDescripcion = "AlmacenDescripcion";
+
+    // Transacciones DDL(Data Definition Language)
+    public static final String CreateTableAlmacenes = "CREATE TABLE tblalmacenes (AlmacenClave INT PRIMARY KEY, AlmacenDescripcion VARCHAR(40))";
+
+    public static String DropTableAlmacenes = "DROP TABLE IF EXISTS tblalmacenes";
 
 }

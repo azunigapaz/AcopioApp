@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     // creamos la cadena que se enviara al webservice
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, HttpURI,
+                    StringRequest stringRequestSubirUsuarios = new StringRequest(Request.Method.POST, HttpURI,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String serverResponse) {
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                         JSONObject jsonObject = new JSONObject(serverResponse);
 
                                         // obtenemos las variables declaradas en el webservice
-                                        String mensajeApi = jsonObject.getString("mensaje");
+                                        String mensajeApi = jsonObject.getString("mensajeactintusuario");
                                         Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
                                     }catch (JSONException ex){
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                     };
 
                     // ejecutamos la cadena
-                    requestQueue.add(stringRequest);
+                    requestQueue.add(stringRequestSubirUsuarios);
                 }
 
                 // cerramos el cursor
@@ -218,11 +218,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void BajarDatos() {
         try{
+            // bajar datos de usuarios
             // Mostramos el progressDialog
             progressDialog.setMessage("Procesando...");
             progressDialog.show();
             // creamos la cadena que se enviara al webservice
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, HttpURI,
+            StringRequest stringRequestBajarUsuarios = new StringRequest(Request.Method.POST, HttpURI,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String serverResponse) {
@@ -312,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                                 objectSqLiteDatabase.close();
 
                                 // obtenemos las variables declaradas en el webservice
-                                String mensajeApi = jsonObject.getString("mensaje");
+                                String mensajeApi = jsonObject.getString("mensajeobtenerusuario");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
                                 progressDialog.dismiss();
@@ -344,7 +345,107 @@ public class MainActivity extends AppCompatActivity {
             };
 
             // ejecutamos la cadena
-            requestQueue.add(stringRequest);
+            requestQueue.add(stringRequestBajarUsuarios);
+
+
+            // Bajar datos de proveedores
+            // Mostramos el progressDialog
+            progressDialog.setMessage("Procesando...");
+            progressDialog.show();
+            // creamos la cadena que se enviara al webservice
+            StringRequest stringRequestBajarProveedores = new StringRequest(Request.Method.POST, HttpURI,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String serverResponse) {
+                            // recibimos la respuesta del web services
+                            try{
+
+                                JSONObject jsonObject = new JSONObject(serverResponse);
+                                JSONArray objectJsonArrayTablaProveedores = jsonObject.getJSONArray("tablaproveedores");
+
+                                SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
+
+                                Cursor objectCursor;
+                                String lsproveedorClave,lsproveedorNombre,lsproveedorRtn,lsproveedorCalle,lsproveedorCruzamiento,lsproveedorLocalidad,lsproveedorMunicipio,lsproveedorTelefon,lsproveedorSaldo;
+                                String consultaSql;
+
+                                for(int i = 0; i < objectJsonArrayTablaProveedores.length(); i++){
+                                    JSONObject objectJsonProveedores = objectJsonArrayTablaProveedores.getJSONObject(i);
+                                    lsproveedorClave = objectJsonProveedores.getString("CLAVE");
+                                    lsproveedorNombre = objectJsonProveedores.getString("NOMBRE");
+
+
+                                    consultaSql = "SELECT * FROM tblproveedores WHERE ProveedorClave = '" + lsproveedorClave + "'";
+
+                                    objectCursor = objectSqLiteDatabase.rawQuery(consultaSql, null);
+
+                                    if(objectCursor.moveToNext()){
+                                        // si el registro existe en el movil, lo actualizamos
+                                        String [] parametroWhere = { lsproveedorClave };
+                                        ContentValues objectContentValuesUpdateProveedores = new ContentValues();
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorNombre, lsproveedorNombre);
+
+
+                                        objectSqLiteDatabase.update(Transacciones.tablaproveedores,objectContentValuesUpdateProveedores,Transacciones.ProveedorClave + "=?", parametroWhere);
+
+                                    }else{
+                                        // si el registro no existe en el movil, lo insertamos
+                                        ContentValues objectContentValuesInsertProveedores = new ContentValues();
+                                        objectContentValuesInsertProveedores.put(Transacciones.UsuarioNombre, lsproveedorNombre);
+
+                                        long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablausuarios, null, objectContentValuesInsertProveedores);
+
+                                        if(checkIfQueryRuns!=-1){
+                                            Toast.makeText(getApplicationContext(), "Proveedor almacenado en la DB", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), "No se almaceno el Proveedor en la DB", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    // cerramos el cursor
+                                    objectCursor.close();
+                                }
+
+                                // cerramos la conexion
+                                objectSqLiteDatabase.close();
+
+                                // obtenemos las variables declaradas en el webservice
+                                String mensajeApi = jsonObject.getString("mensajeobtenerproductores");
+                                Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
+
+                                progressDialog.dismiss();
+
+                            }catch (JSONException ex){
+                                ex.printStackTrace();
+                                progressDialog.dismiss();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // si hay algun error por parte de la libreria Voley
+                    progressDialog.dismiss();
+                    // mostramos el error de la libreria
+                    Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                }
+            }){
+                // el primer paso es enviar los datos al web services, con sus respectivos parametros
+                // se hace un mapeo de un arreglo de 2 dimesiones
+                protected Map<String,String> getParams(){
+                    Map<String,String> parametros = new HashMap<>();
+                    // parametros que enviaremos al web service
+                    parametros.put("opcion", "obtenerproductores");
+
+                    return parametros;
+                }
+            };
+
+            // ejecutamos la cadena
+            requestQueue.add(stringRequestBajarProveedores);
+
+
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();

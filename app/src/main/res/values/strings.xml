@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">AcopioApp</string>
+
+    <string-array name="filtros_consulta">
+        <item>Dia Anterior</item>
+        <item>Por Dia</item>
+        <item>Ultima Semana</item>
+        <item>Ultimo Mes</item>
+        <item>Ultimo Año</item>
+    </string-array>
 </resources>

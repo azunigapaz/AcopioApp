@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityListViewConsultaAcopio">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/cacaoactivity_bg">
+
+            <ImageView
+                android:id="@+id/btnvolveractivitymainacopio"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="left"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/flechavolver_icono" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/consultaacopiotexto"/>
+
+        </FrameLayout>
+
+        <!-- ICON ADD -->
+        <ImageView
+            android:id="@+id/acopio_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="360dp"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/aniadir_icono" />
+
+        <!-- NOMBRE -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="-43dp"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/cacao_border_rounded_cornwe_black">
+
+            <!-- INPUT -->
+            <EditText
+                android:id="@+id/nombreusuarioregistro_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/buscarconsultasacopio_icon"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="Buscar"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:paddingLeft="17dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="12sp" />
+
+            <!-- ICON -->
+            <ImageView
+                android:id="@+id/buscarconsultasacopio_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="17dp"
+                android:src="@drawable/buscar_icono" />
+        </RelativeLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            app:startIconDrawable="@drawable/filtrarpor_icono"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu" >
+
+            <AutoCompleteTextView
+                android:id="@+id/filtrarpor_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:text="Filtrar por:" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ListView
+            android:id="@+id/acopio_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true"/>
+    </LinearLayout>
+
+</ScrollView>

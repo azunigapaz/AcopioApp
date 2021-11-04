@@ -31,12 +31,14 @@ public class SQLiteConexion extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Creamos las tablas de la base de datos
         db.execSQL(Transacciones.CreateTableUsuarios);
+        db.execSQL(Transacciones.CreateTableProveedores);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // eliminamos las tablas de la base de datos, funcion para limpiar la db
         db.execSQL(Transacciones.DropTableUsuario);
+        db.execSQL(Transacciones.DropTableProveedores);
 
         // Cramos nuevamente las tablas
         onCreate(db);

@@ -17,6 +17,15 @@
             android:background="@drawable/cacao_bg">
 
             <ImageView
+                android:id="@+id/btncerrarsesionaisl"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/cerrarsesion_icon" />
+
+            <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"

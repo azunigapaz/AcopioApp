@@ -1,20 +1,20 @@
 package com.grupoadec.acopioapp.models;
 
 public class Usuario {
-    Integer id;
-    String nombre;
-    String apellido;
-    String telefono;
-    String correo;
-    String contrasenia;
-    Integer nuevoregistro;
-    Integer accesoconfiguracion;
-    Integer accesobajardatos;
-    Integer accesosubirdatos;
-    Integer accesoregistroprodcutores;
-    Integer accesoregistroacopio;
-    Integer estado;
-    String fechacreacion;
+    private Integer id;
+    private String nombre;
+    private String apellido;
+    private String telefono;
+    private String correo;
+    private String contrasenia;
+    private Integer nuevoregistro;
+    private Integer accesoconfiguracion;
+    private Integer accesobajardatos;
+    private Integer accesosubirdatos;
+    private Integer accesoregistroprodcutores;
+    private Integer accesoregistroacopio;
+    private Integer estado;
+    private String fechacreacion;
 
     public Usuario(Integer id, String nombre, String apellido, String telefono, String correo, String contrasenia, Integer nuevoregistro, Integer accesoconfiguracion, Integer accesobajardatos, Integer accesosubirdatos, Integer accesoregistroprodcutores, Integer accesoregistroacopio, Integer estado, String fechacreacion) {
         this.id = id;

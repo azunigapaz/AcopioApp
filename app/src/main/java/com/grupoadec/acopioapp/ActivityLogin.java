@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class ActivityLogin extends AppCompatActivity {
     EditText correologin_input, passwordlogin_input;
     TextView btnlogin;
     TextView txtactivityregistro;
+    ImageView btncerrarsesionaisl;
 
     ProgressDialog progressDialog;
 
@@ -65,6 +67,7 @@ public class ActivityLogin extends AppCompatActivity {
             btnlogin = (TextView) findViewById(R.id.btnlogin);
 
             txtactivityregistro = (TextView) findViewById(R.id.txtactivityregistro);
+            btncerrarsesionaisl = (ImageView) findViewById(R.id.btncerrarsesionaisl);
 
             // inicializamos requestQueue
             requestQueue = Volley.newRequestQueue(this);
@@ -93,6 +96,13 @@ public class ActivityLogin extends AppCompatActivity {
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
+                }
+            });
+
+            btncerrarsesionaisl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finishAndRemoveTask();
                 }
             });
         }catch (Exception e){

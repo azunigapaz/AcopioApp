@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     // declaracion de variables
     ImageButton btnSubirDatos,btnRegistroAcopio,btnAccesoConfiguracion,btnBajarDatos;
+    ImageView btncerrarsesion;
 
     ProgressDialog progressDialog;
 
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             btnRegistroAcopio = (ImageButton) findViewById(R.id.btnRegistroAcopio);
             btnBajarDatos = (ImageButton) findViewById(R.id.btnBajarDatos);
             btnAccesoConfiguracion = (ImageButton) findViewById(R.id.btnConfiguracion);
+            btncerrarsesion = (ImageView) findViewById(R.id.btncerrarsesion);
 
             // inicializamos requestQueue
             requestQueue = Volley.newRequestQueue(this);
@@ -100,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
             btnSubirDatos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     SubirDatos();
                 }
             });
@@ -109,7 +111,34 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     BajarDatos();
-                    //Toast.makeText(getApplicationContext(),"Click en bajar datos",Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            btnRegistroAcopio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
+
+                    objectIntent.putExtra("iPeNombres", parPeNombres);
+                    objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                    objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                    objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                    objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                    objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                    objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                    objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                    startActivity(objectIntent);
+                    finish();
+                }
+            });
+
+            btncerrarsesion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent objectIntent = new Intent(getApplicationContext(), ActivityLogin.class);
+                    startActivity(objectIntent);
+                    finish();
                 }
             });
 

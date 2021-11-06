@@ -1,20 +1,20 @@
 package com.grupoadec.acopioapp.models;
 
 public class TablaUsuarios {
-    public String UsuarioId;
-    public String UsuarioNombre;
-    public String UsuarioApellido;
-    public String UsuarioTelefono;
-    public String UsuarioCorreo;
-    public String UsuarioContrasenia;
-    public String UsuarioNuevoRegistro;
-    public String UsuarioAccesoConfiguracion;
-    public String UsuarioAccesoBajarDatos;
-    public String UsuarioAccesoSubirDatos;
-    public String UsuarioAccesoRegistroProductores;
-    public String UsuarioAccesoRegistroAcopio;
-    public String UsuarioEstado;
-    public String UsuarioFechaCreacion;
+    private String UsuarioId;
+    private String UsuarioNombre;
+    private String UsuarioApellido;
+    private String UsuarioTelefono;
+    private String UsuarioCorreo;
+    private String UsuarioContrasenia;
+    private String UsuarioNuevoRegistro;
+    private String UsuarioAccesoConfiguracion;
+    private String UsuarioAccesoBajarDatos;
+    private String UsuarioAccesoSubirDatos;
+    private String UsuarioAccesoRegistroProductores;
+    private String UsuarioAccesoRegistroAcopio;
+    private String UsuarioEstado;
+    private String UsuarioFechaCreacion;
 
     public TablaUsuarios(String usuarioId, String usuarioNombre, String usuarioApellido, String usuarioTelefono, String usuarioCorreo, String usuarioContrasenia, String usuarioNuevoRegistro, String usuarioAccesoConfiguracion, String usuarioAccesoBajarDatos, String usuarioAccesoSubirDatos, String usuarioAccesoRegistroProductores, String usuarioAccesoRegistroAcopio, String usuarioEstado, String usuarioFechaCreacion) {
         UsuarioId = usuarioId;

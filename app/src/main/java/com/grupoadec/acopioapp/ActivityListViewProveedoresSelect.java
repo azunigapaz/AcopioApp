@@ -30,7 +30,7 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
     final ArrayList<TablaProveedores> objectArrayListTablaProveedoresLista = new ArrayList<>();
     ArrayList<String> objectArrayListStringProveedores;
     TablaProveedores objectTablaProveedoresListaProveedores = null;
-    EditText objectEditTextNombreusuarioregistro_input;
+    EditText objectEditTextBuscarproveedores_input;
     ImageView objectImageViewBtnvolveractivitymain;
 
     @Override
@@ -40,7 +40,7 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
         try {
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
             objectListViewConsultaProveedores = (ListView) findViewById(R.id.acopio_listview);
-            objectEditTextNombreusuarioregistro_input = (EditText) findViewById(R.id.nombreusuarioregistro_input);
+            objectEditTextBuscarproveedores_input = (EditText) findViewById(R.id.buscarproveedores_input);
             objectImageViewBtnvolveractivitymain = (ImageView) findViewById(R.id.btnvolveractivitymain);
 
             // llenamos variables con los datos del putExtra
@@ -59,7 +59,7 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
             ArrayAdapter objectArrayAdapterListaProveedores = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1,objectArrayListStringProveedores);
             objectListViewConsultaProveedores.setAdapter(objectArrayAdapterListaProveedores);
 
-            objectEditTextNombreusuarioregistro_input.addTextChangedListener(new TextWatcher() {
+            objectEditTextBuscarproveedores_input.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -102,6 +102,7 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
                     Intent objectIntent = new Intent(getApplicationContext(),ActivityMainAcopio.class);
                     objectIntent.putExtra("iptProveedorClave", tp.getProveedorClave());
                     objectIntent.putExtra("iptProveedorNombre", tp.getProveedorNombre());
+                    objectIntent.putExtra("iptProveedorNombre", tp.getProveedorRtn());
 
                     objectIntent.putExtra("iPeNombres", parPeNombres);
                     objectIntent.putExtra("iPeApellidos", parPeApellidos);

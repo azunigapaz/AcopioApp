@@ -53,7 +53,7 @@ public class ActivityRegistro extends AppCompatActivity {
             df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             formattedDate = df.format(c.getTime());
 
-            nombreusuarioregistro_input = (EditText) findViewById(R.id.nombreusuarioregistro_input);
+            nombreusuarioregistro_input = (EditText) findViewById(R.id.buscarproveedores_input);
             apellidousuarioregistro_input = (EditText) findViewById(R.id.apellidousuarioregistro_input);
             telefonoregistro_input = (EditText) findViewById(R.id.telefonoregistro_input);
             correoregistro_input = (EditText) findViewById(R.id.correoregistro_input);

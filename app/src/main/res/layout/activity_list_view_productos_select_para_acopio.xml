@@ -67,6 +67,12 @@
                 android:layout_marginLeft="17dp"
                 android:src="@drawable/buscar_icono" />
         </RelativeLayout>
+        <ListView
+            android:id="@+id/productos_listview"
+            android:layout_width="match_parent"
+            android:layout_height="425dp"
+            android:layout_marginTop="10dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true" />
     </LinearLayout>
 
 </ScrollView>

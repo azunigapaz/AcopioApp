@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import android.provider.Settings.Secure;
+
 
 public class MainActivity extends AppCompatActivity {
     // declaracion de variables
@@ -62,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
             btnBajarDatos = (ImageButton) findViewById(R.id.btnBajarDatos);
             btnAccesoConfiguracion = (ImageButton) findViewById(R.id.btnConfiguracion);
             btncerrarsesion = (ImageView) findViewById(R.id.btncerrarsesion);
+
+            // generar un codigo unico para el app
+            String uniqueID = UUID.randomUUID().toString();
+            Log.d("Codigo Aleatorio: ",uniqueID);
+
+            String id = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+            Log.d("Codigo Unico: ",id);
 
             // inicializamos requestQueue
             requestQueue = Volley.newRequestQueue(this);

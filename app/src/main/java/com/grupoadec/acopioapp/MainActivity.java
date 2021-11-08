@@ -1,18 +1,25 @@
 package com.grupoadec.acopioapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -23,7 +30,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
-import com.grupoadec.acopioapp.models.TablaUsuarios;
+import com.grupoadec.acopioapp.models.TablaAlmacenes;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
     // declaracion de variables
     ImageButton btnSubirDatos,btnRegistroAcopio,btnAccesoConfiguracion,btnBajarDatos;
     ImageView btncerrarsesion;
+    //Spinner spinnerSelectAlmacen;
+
+    ArrayList<String> objectArrayListStringAlmacenes;
+    ArrayList<TablaAlmacenes> objectArrayListAlmacenesLista;
 
     ProgressDialog progressDialog;
 
@@ -50,9 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
     SQLiteConexion objectSqLiteConexion;
 
-    ListView objectListViewListaUsuarios;
-    List<TablaUsuarios> objectListTablaUsuarios;
-    ArrayList<String> objectArrayListUsuarios;
+    String AlmacenClave,AlmacenDescripcion;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
             btnAccesoConfiguracion = (ImageButton) findViewById(R.id.btnConfiguracion);
             btncerrarsesion = (ImageView) findViewById(R.id.btncerrarsesion);
 
+            // inicializamos la conexion
+            objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase,null,1);
+
+            // Llenamos el Spinner Almacenes
+            ObtenerListaAlmacenes();
+
             // generar un codigo unico para el app
             String uniqueID = UUID.randomUUID().toString();
             Log.d("Codigo Aleatorio: ",uniqueID);
@@ -79,12 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
             // inicializamos el progress bar
             progressDialog = new ProgressDialog(this);
-
-            // inicializamos la conexion
-            objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase,null,1);
-
-            objectListTablaUsuarios =  new ArrayList<>();
-            objectArrayListUsuarios = new ArrayList<String>();
 
             // llenamos variables con los datos del putExtra
             String parPeNombres = getIntent().getStringExtra("peNombre");
@@ -128,19 +138,78 @@ public class MainActivity extends AppCompatActivity {
             btnRegistroAcopio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
 
-                    objectIntent.putExtra("iPeNombres", parPeNombres);
-                    objectIntent.putExtra("iPeApellidos", parPeApellidos);
-                    objectIntent.putExtra("iPeCorreo", parPeCorreo);
-                    objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
-                    objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
-                    objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
-                    objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
-                    objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+                    Spinner selector = new Spinner(MainActivity.this);
+                    selector.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+                    selector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(final AdapterView<?> adapterView, View view, final int i, long l) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlmacenClave = objectArrayListAlmacenesLista.get(i).getAlmacenClave().toString();
+                                    AlmacenDescripcion = objectArrayListAlmacenesLista.get(i).getAlmacenDescripcion();
+                                    //adapterView.getItemAtPosition(i).toString()
+                                    //Toast.makeText(MainActivity.this, AlmacenClave + " " + AlmacenDescripcion,Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
 
-                    startActivity(objectIntent);
-                    finish();
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(MainActivity.this,
+                            android.R.layout.simple_spinner_item,
+                            objectArrayListStringAlmacenes);
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    selector.setAdapter(dataAdapter);
+                    dataAdapter.notifyDataSetChanged();
+
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                    dialogBuilder.setView(selector);
+                    dialogBuilder.setTitle("Selecciones un Almacen");
+                    dialogBuilder.setCancelable(false)
+                            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    if(selector.getSelectedItem().toString().length()>0){
+                                        // Si el usuario confirma
+                                        Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
+
+                                        objectIntent.putExtra("iPeNombres", parPeNombres);
+                                        objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                                        objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                                        objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                                        objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                                        objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                                        objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                                        objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+                                        objectIntent.putExtra("ipeAlmacenClave", AlmacenClave);
+                                        objectIntent.putExtra("ipeAlmacenDescripcion", AlmacenDescripcion);
+
+                                        Toast.makeText(MainActivity.this,"Ha seleccionado el almacen: " + AlmacenClave + " " + AlmacenDescripcion, Toast.LENGTH_SHORT).show();
+
+                                        startActivity(objectIntent);
+                                        finish();
+                                    }else{
+                                        Toast.makeText(MainActivity.this,"Debe seleccionar un almacen", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //  Action for 'NO' Button
+                                    dialog.cancel();
+
+                                }
+                            });
+                    //dialogBuilder.setMessage("message");
+                    AlertDialog b = dialogBuilder.create();
+                    b.show();
                 }
             });
 
@@ -155,6 +224,34 @@ public class MainActivity extends AppCompatActivity {
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void ObtenerListaAlmacenes() {
+        SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getReadableDatabase();
+        TablaAlmacenes objectTablaAlmacenesLista = null;
+        objectArrayListAlmacenesLista = new ArrayList<TablaAlmacenes>();
+
+        Cursor objectCursor = objectSqLiteDatabase.rawQuery("SELECT * FROM " + Transacciones.tablaalmacenes, null);
+
+        while (objectCursor.moveToNext()){
+            objectTablaAlmacenesLista = new TablaAlmacenes();
+            objectTablaAlmacenesLista.setAlmacenClave(objectCursor.getInt(0));
+            objectTablaAlmacenesLista.setAlmacenDescripcion(objectCursor.getString(1));
+
+            objectArrayListAlmacenesLista.add(objectTablaAlmacenesLista);
+        }
+
+        objectCursor.close();
+
+        LlenarspinnerSelectAlmacen();
+    }
+
+    private void LlenarspinnerSelectAlmacen() {
+        objectArrayListStringAlmacenes = new ArrayList<String>();
+        for(int i = 0; i < objectArrayListAlmacenesLista.size(); i++){
+            objectArrayListStringAlmacenes.add(objectArrayListAlmacenesLista.get(i).getAlmacenClave().toString() + " | " +
+                    objectArrayListAlmacenesLista.get(i).getAlmacenDescripcion());
         }
     }
 

@@ -8,4 +8,8 @@
         <item>Ultimo Mes</item>
         <item>Ultimo Año</item>
     </string-array>
+    <string-array name="almacenes">
+        <item>Almacen 1</item>
+        <item>Almacen 2</item>
+    </string-array>
 </resources>

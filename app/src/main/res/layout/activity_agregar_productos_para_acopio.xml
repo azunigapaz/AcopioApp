@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityConfiguracion">
+    tools:context=".ActivityAgregarProductosParaAcopio">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:background="@drawable/cacaoactivity_bg">
 
             <ImageView
-                android:id="@+id/btncfgvolvermain"
+                android:id="@+id/btnvolveractivityproductos"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_gravity="left"
@@ -28,8 +28,9 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:src="@drawable/configuraciontexto" />
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@drawable/agregarproductotexto" />
         </FrameLayout>
 
         <RelativeLayout
@@ -40,32 +41,28 @@
             android:layout_marginRight="35dp"
             android:background="@drawable/cacao_border_rounded_cornwe_black">
 
-            <EditText
-                android:id="@+id/idusuarioconfiguracion_input"
+            <TextView
+                android:id="@+id/nombreproductoparaacopio_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/idcontacto_icon"
+                android:layout_toRightOf="@+id/productoparaacopio_icon"
                 android:background="@android:color/transparent"
-                android:focusable="false"
-                android:fontFamily="@font/poppins_medium"
-                android:hint="  ID"
-                android:inputType="textPersonName"
-                android:maxLength="60"
+                android:fontFamily="@font/poppins_regular"
                 android:maxLines="1"
                 android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:textCursorDrawable="@drawable/cursor_color"
-                android:textSize="15sp" />
+                android:text="  Nombre Producto"
+                android:textSize="15dp" />
 
             <!-- ICON FACTURA -->
             <ImageView
-                android:id="@+id/idcontacto_icon"
+                android:id="@+id/productoparaacopio_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="17dp"
-                android:src="@drawable/persona_icono" />
+                android:src="@drawable/productores_icono" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -78,14 +75,14 @@
 
             <!-- INPUT -->
             <EditText
-                android:id="@+id/ultimodocumentoconfiguracion_input"
+                android:id="@+id/cantidadproductoparaacopio_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/doc_icon"
+                android:layout_toRightOf="@+id/cantidadproducto_icon"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="  Ultimo Documento"
-                android:inputType="number"
+                android:hint="  Cantidad"
+                android:inputType="numberDecimal"
                 android:maxLength="60"
                 android:maxLines="1"
                 android:paddingLeft="5dp"
@@ -96,12 +93,12 @@
 
             <!-- ICON -->
             <ImageView
-                android:id="@+id/doc_icon"
+                android:id="@+id/cantidadproducto_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="17dp"
-                android:src="@drawable/doc_icono" />
+                android:src="@drawable/cantidad_icono" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -114,14 +111,14 @@
 
             <!-- INPUT -->
             <EditText
-                android:id="@+id/urlconfiguracion_input"
+                android:id="@+id/precioconfiguracion_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/url_icon"
+                android:layout_toRightOf="@+id/dolaracopio_icon"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="  URL"
-                android:inputType="textPersonName"
+                android:hint="  Precio"
+                android:inputType="numberDecimal"
                 android:maxLength="60"
                 android:maxLines="1"
                 android:paddingLeft="5dp"
@@ -132,45 +129,12 @@
 
             <!-- ICON -->
             <ImageView
-                android:id="@+id/url_icon"
+                android:id="@+id/dolaracopio_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="17dp"
-                android:src="@drawable/url_icono" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="35dp"
-            android:background="@drawable/cacao_border_rounded_cornwe_black">
-
-            <!-- INPUT -->
-            <Spinner
-                android:id="@+id/tipoimpresoraconfiguracion_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_toRightOf="@+id/tipoimpresora_icon"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/poppins_medium"
-                android:maxLength="60"
-                android:maxLines="1"
-                android:paddingLeft="5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:textSize="15sp" />
-
-            <!-- ICON -->
-            <ImageView
-                android:id="@+id/tipoimpresora_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="17dp"
-                android:src="@drawable/impresora_icono" />
+                android:src="@drawable/dolar_icono" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -181,14 +145,14 @@
             android:layout_marginRight="15dp">
 
             <Button
-                android:id="@+id/btnguardarconfiguracion"
+                android:id="@+id/btnagregarproducto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginEnd="50dp"
                 android:layout_marginBottom="25dp"
                 android:backgroundTint="#1BBD40"
-                android:text="Guardar" />
+                android:text="Agregar" />
 
         </RelativeLayout>
 

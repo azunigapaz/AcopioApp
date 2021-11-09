@@ -135,6 +135,25 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            btnAccesoConfiguracion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent objectIntent = new Intent(getApplicationContext(),ActivityConfiguracion.class);
+
+                    objectIntent.putExtra("iPeNombres", parPeNombres);
+                    objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                    objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                    objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                    objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                    objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                    objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                    objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                    startActivity(objectIntent);
+                    finish();
+                }
+            });
+
             btnRegistroAcopio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -257,29 +276,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void SubirDatos() {
         try{
-            SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getReadableDatabase();
-            Cursor objectCursor = objectSqLiteDatabase.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioNuevoRegistro=1", null);
 
-            if(objectCursor.getCount()!=0){
+            SQLiteDatabase objectSqLiteDatabase;
+
+            // subir usuarios
+            objectSqLiteDatabase = objectSqLiteConexion.getReadableDatabase();
+            Cursor objectCursorUsuarios = objectSqLiteDatabase.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioNuevoRegistro=1", null);
+
+            progressDialog.setMessage("Procesando usuarios...");
+            progressDialog.show();
+
+            if(objectCursorUsuarios.getCount()!=0){
                 // Mostramos el progressDialog
-                progressDialog.setMessage("Procesando...");
-                progressDialog.show();
-
-                while (objectCursor.moveToNext()){
+                while (objectCursorUsuarios.moveToNext()){
                     // declaramos variables que llenaremos con los datos obtenidos del cursor
-                    final String usuarionombre = objectCursor.getString(1);
-                    final String usuarioapellido = objectCursor.getString(2);
-                    final String usuariotelefono = objectCursor.getString(3);
-                    final String usuariocorreo = objectCursor.getString(4);
-                    final String usuariocontrasenia = objectCursor.getString(5);
-                    final String usuarionuevousuario = objectCursor.getString(6);
-                    final String usuarioaccesoconfiguracion = objectCursor.getString(7);
-                    final String usuarioaccesobajardatos = objectCursor.getString(8);
-                    final String usuarioaccesosubirdatos = objectCursor.getString(9);
-                    final String usuarioaccesoregistroproductores = objectCursor.getString(10);
-                    final String usuarioaccesoregistroacopio = objectCursor.getString(11);
-                    final String usuarioestado = objectCursor.getString(12);
-                    final String usuariofechacreacion = objectCursor.getString(13);
+                    final String usuarionombre = objectCursorUsuarios.getString(1);
+                    final String usuarioapellido = objectCursorUsuarios.getString(2);
+                    final String usuariotelefono = objectCursorUsuarios.getString(3);
+                    final String usuariocorreo = objectCursorUsuarios.getString(4);
+                    final String usuariocontrasenia = objectCursorUsuarios.getString(5);
+                    final String usuarionuevousuario = objectCursorUsuarios.getString(6);
+                    final String usuarioaccesoconfiguracion = objectCursorUsuarios.getString(7);
+                    final String usuarioaccesobajardatos = objectCursorUsuarios.getString(8);
+                    final String usuarioaccesosubirdatos = objectCursorUsuarios.getString(9);
+                    final String usuarioaccesoregistroproductores = objectCursorUsuarios.getString(10);
+                    final String usuarioaccesoregistroacopio = objectCursorUsuarios.getString(11);
+                    final String usuarioestado = objectCursorUsuarios.getString(12);
+                    final String usuariofechacreacion = objectCursorUsuarios.getString(13);
 
 
                     // creamos la cadena que se enviara al webservice
@@ -340,14 +363,90 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // cerramos el cursor
-                objectCursor.close();
+                objectCursorUsuarios.close();
                 // cerramos la conexion
                 objectSqLiteDatabase.close();
                 // ocultamos el progress Dialog
                 progressDialog.dismiss();
             }else{
-                Toast.makeText(this, "No existen registros en la base de datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No existen registros de usuarios en la base de datos", Toast.LENGTH_SHORT).show();
             }
+
+            // subir configuraciones
+            objectSqLiteDatabase = objectSqLiteConexion.getReadableDatabase();
+            Cursor objectCursorConfiguraciones = objectSqLiteDatabase.rawQuery("SELECT * FROM " + Transacciones.tablaconfiguraciones, null);
+
+            progressDialog.setMessage("Procesando configuraciones...");
+            progressDialog.show();
+
+            if(objectCursorConfiguraciones.getCount()!=0){
+                // Mostramos el progressDialog
+                while (objectCursorConfiguraciones.moveToNext()){
+                    // declaramos variables que llenaremos con los datos obtenidos del cursor
+                    final String configuracionId = objectCursorConfiguraciones.getString(0);
+                    final String configuracionSufijoDocumento = objectCursorConfiguraciones.getString(1);
+                    final String configuracionUltimoDocumento = String.valueOf(objectCursorConfiguraciones.getInt(2));
+                    final String configuracionUrl = objectCursorConfiguraciones.getString(3);
+                    final String configuracionTipoImpresora = objectCursorConfiguraciones.getString(4);
+
+                    // creamos la cadena que se enviara al webservice
+                    StringRequest stringRequestSubirConfiguraciones = new StringRequest(Request.Method.POST, HttpURI,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String serverResponse) {
+                                    // Recibimos la respuesta del web services
+                                    try{
+                                        JSONObject jsonObject = new JSONObject(serverResponse);
+
+                                        // obtenemos las variables declaradas en el webservice
+                                        String mensajeApi = jsonObject.getString("mensajeactintconfiguraciones");
+                                        Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
+
+                                    }catch (JSONException ex){
+                                        ex.printStackTrace();
+                                    }
+
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // si hay algun error por parte de la libreria Voley
+                            progressDialog.dismiss();
+                            // mostramos el error de la libreria
+                            Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                        }
+                    }){
+                        // Enviamos los datos al web services, con sus respectivos parametros, hacemos un mapeo de un arreglo de 2 dimesiones
+                        protected Map<String,String> getParams(){
+                            Map<String,String> parametros = new HashMap<>();
+                            // parametros que enviaremos al web service
+                            parametros.put("opcion", "insertarconfiguraciones");
+
+                            parametros.put("ConfiguracionId", configuracionId);
+                            parametros.put("ConfiguracionSufijoDocumento", configuracionSufijoDocumento);
+                            parametros.put("ConfiguracionUltimoDocumento", configuracionUltimoDocumento);
+                            parametros.put("ConfiguracionUrl", configuracionUrl);
+                            parametros.put("ConfiguracionTipoImpresora", configuracionTipoImpresora);
+
+                            return parametros;
+                        }
+                    };
+
+                    // ejecutamos la cadena
+                    requestQueue.add(stringRequestSubirConfiguraciones);
+                }
+
+                // cerramos el cursor
+                objectCursorConfiguraciones.close();
+                // cerramos la conexion
+                objectSqLiteDatabase.close();
+                // ocultamos el progress Dialog
+                progressDialog.dismiss();
+            }else{
+                Toast.makeText(this, "No existen registros de configuración en la base de datos", Toast.LENGTH_SHORT).show();
+            }
+
+
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
@@ -796,6 +895,110 @@ public class MainActivity extends AppCompatActivity {
 
             // ejecutamos la cadena
             requestQueue.add(stringRequestBajarAlmacenes);
+
+            // Bajar datos de configuraciones
+            StringRequest stringRequestBajarConfiguraciones = new StringRequest(Request.Method.POST, HttpURI,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String serverResponse) {
+                            // recibimos la respuesta del web services
+                            try{
+                                JSONObject jsonObject = new JSONObject(serverResponse);
+                                JSONArray objectJsonArrayTablaConfiguraciones = jsonObject.getJSONArray("tablaconfiguraciones");
+
+                                SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
+
+                                Cursor objectCursor;
+                                String lsConfiguracionId,lsConfiguracionSufijoDocumento,lsConfiguracionUltimoDocumento,lsConfiguracionUrl,lsConfiguracionTipoImpresora;
+                                String consultaSql;
+
+                                for(int i = 0; i < objectJsonArrayTablaConfiguraciones.length(); i++){
+                                    JSONObject objectJsonConfiguraciones = objectJsonArrayTablaConfiguraciones.getJSONObject(i);
+                                    lsConfiguracionId = objectJsonConfiguraciones.getString("ConfiguracionId");
+                                    lsConfiguracionSufijoDocumento = objectJsonConfiguraciones.getString("ConfiguracionSufijoDocumento");
+                                    lsConfiguracionUltimoDocumento = objectJsonConfiguraciones.getString("ConfiguracionUltimoDocumento");
+                                    lsConfiguracionUrl = objectJsonConfiguraciones.getString("ConfiguracionUrl");
+                                    lsConfiguracionTipoImpresora = objectJsonConfiguraciones.getString("ConfiguracionTipoImpresora");
+
+                                    consultaSql = "SELECT * FROM tblconfiguraciones WHERE ConfiguracionId = '" + lsConfiguracionId + "'";
+
+                                    objectCursor = objectSqLiteDatabase.rawQuery(consultaSql, null);
+
+                                    if(objectCursor.moveToNext()){
+                                        // si el registro existe en el movil, lo actualizamos
+                                        String [] parametroWhere = { lsConfiguracionId };
+                                        ContentValues objectContentValuesUpdateConfiguraciones = new ContentValues();
+                                        objectContentValuesUpdateConfiguraciones.put(Transacciones.ConfiguracionSufijoDocumento, lsConfiguracionSufijoDocumento);
+                                        objectContentValuesUpdateConfiguraciones.put(Transacciones.ConfiguracionUltimoDocumento, Integer.parseInt(lsConfiguracionUltimoDocumento));
+                                        objectContentValuesUpdateConfiguraciones.put(Transacciones.ConfiguracionUrl, lsConfiguracionUrl);
+                                        objectContentValuesUpdateConfiguraciones.put(Transacciones.ConfiguracionTipoImpresora, lsConfiguracionTipoImpresora);
+
+                                        objectSqLiteDatabase.update(Transacciones.tablaconfiguraciones,objectContentValuesUpdateConfiguraciones,Transacciones.ConfiguracionId + "=?", parametroWhere);
+
+                                    }else{
+                                        // si el registro no existe en el movil, lo insertamos
+                                        ContentValues objectContentValuesInsertConfiguraciones = new ContentValues();
+                                        objectContentValuesInsertConfiguraciones.put(Transacciones.ConfiguracionId, lsConfiguracionId);
+                                        objectContentValuesInsertConfiguraciones.put(Transacciones.ConfiguracionSufijoDocumento, lsConfiguracionSufijoDocumento);
+                                        objectContentValuesInsertConfiguraciones.put(Transacciones.ConfiguracionUltimoDocumento, Integer.parseInt(lsConfiguracionUltimoDocumento));
+                                        objectContentValuesInsertConfiguraciones.put(Transacciones.ConfiguracionUrl, lsConfiguracionUrl);
+                                        objectContentValuesInsertConfiguraciones.put(Transacciones.ConfiguracionTipoImpresora, lsConfiguracionTipoImpresora);
+
+                                        long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablaconfiguraciones, null, objectContentValuesInsertConfiguraciones);
+
+                                        if(checkIfQueryRuns!=-1){
+                                            //Toast.makeText(getApplicationContext(), "Configuración almacenada", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), "No se almaceno la configuración", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    // cerramos el cursor
+                                    objectCursor.close();
+                                }
+
+                                // cerramos la conexion
+                                objectSqLiteDatabase.close();
+
+                                // obtenemos las variables declaradas en el webservice
+                                String mensajeApi = jsonObject.getString("mensajeobtenerconfiguraciones");
+                                Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(getApplicationContext(), "Configuración actualizada", Toast.LENGTH_SHORT).show();
+
+                                // ocultamos el progressDialog
+                                progressDialog.dismiss();
+
+                            }catch (JSONException ex){
+                                ex.printStackTrace();
+                                progressDialog.dismiss();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // si hay algun error por parte de la libreria Voley
+                    progressDialog.dismiss();
+                    // mostramos el error de la libreria
+                    Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                }
+            }){
+                // el primer paso es enviar los datos al web services, con sus respectivos parametros
+                // se hace un mapeo de un arreglo de 2 dimesiones
+                protected Map<String,String> getParams(){
+                    Map<String,String> parametros = new HashMap<>();
+                    // parametros que enviaremos al web service
+                    parametros.put("opcion", "obtenerconfiguraciones");
+
+                    return parametros;
+                }
+            };
+
+            // ejecutamos la cadena
+            requestQueue.add(stringRequestBajarConfiguraciones);
+
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();

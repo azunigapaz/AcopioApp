@@ -51,12 +51,12 @@ public class Transacciones {
     public static final String DropTableProveedores = "DROP TABLE IF EXISTS tblproveedores";
 
     // tabla productos
-    public static String tablaproductos = "tblproductos";
+    public static final String tablaproductos = "tblproductos";
     // campos de la tabla productos
-    public static String ProductoClave = "ProductoClave";
-    public static String ProductoDescripcion = "ProductoDescripcion";
-    public static String ProductoCosto = "ProductoCosto";
-    public static String ProductoLinea = "ProductoLinea";
+    public static final String ProductoClave = "ProductoClave";
+    public static final String ProductoDescripcion = "ProductoDescripcion";
+    public static final String ProductoCosto = "ProductoCosto";
+    public static final String ProductoLinea = "ProductoLinea";
 
     // Transacciones DDL(Data Definition Language)
     public static final String CreateTableProductos = "CREATE TABLE tblproductos (ProductoClave VARCHAR(16) PRIMARY KEY," +
@@ -65,14 +65,29 @@ public class Transacciones {
     public static final String DropTableProductos = "DROP TABLE IF EXISTS tblproductos";
 
     // tabla almacenes
-    public static String tablaalmacenes = "tblalmacenes";
+    public static final String tablaalmacenes = "tblalmacenes";
     // campos de la tabla almacenes
-    public static String AlmacenClave = "AlmacenClave";
-    public static String AlmacenDescripcion = "AlmacenDescripcion";
+    public static final String AlmacenClave = "AlmacenClave";
+    public static final String AlmacenDescripcion = "AlmacenDescripcion";
 
     // Transacciones DDL(Data Definition Language)
     public static final String CreateTableAlmacenes = "CREATE TABLE tblalmacenes (AlmacenClave INT PRIMARY KEY, AlmacenDescripcion VARCHAR(40))";
 
-    public static String DropTableAlmacenes = "DROP TABLE IF EXISTS tblalmacenes";
+    public static final String DropTableAlmacenes = "DROP TABLE IF EXISTS tblalmacenes";
+
+    // tabla configuracion
+    public static final String tablaconfiguraciones = "tblconfiguraciones";
+    // campos de la tabla configuraciones
+    public static final String ConfiguracionId = "ConfiguracionId";
+    public static final String ConfiguracionSufijoDocumento = "ConfiguracionSufijoDocumento";
+    public static final String ConfiguracionUltimoDocumento = "ConfiguracionUltimoDocumento";
+    public static final String ConfiguracionUrl = "ConfiguracionUrl";
+    public static final String ConfiguracionTipoImpresora = "ConfiguracionTipoImpresora";
+
+    // DDL
+    public static final String CreateTableConfiguraciones = "CREATE TABLE tblconfiguraciones (ConfiguracionId VARCHAR(120) PRIMARY KEY, ConfiguracionSufijoDocumento VARCHAR(60),"+
+            "ConfiguracionUltimoDocumento INT, ConfiguracionUrl VARCHAR(200), ConfiguracionTipoImpresora VARCHAR(60))";
+
+    public static final String DropTableConfiguraciones = "DROP TABLE IF EXISTS tblconfiguraciones";
 
 }

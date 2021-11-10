@@ -100,6 +100,8 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
                     objectIntent.putExtra("iptProveedorNombre", parPeProveedorNombre);
                     objectIntent.putExtra("iptProveedorRtn", parPeProveedorRtn);
 
+                    objectIntent.putExtra("iPeNuevaFactura", "0");
+
                     startActivity(objectIntent);
                     finish();
                 }

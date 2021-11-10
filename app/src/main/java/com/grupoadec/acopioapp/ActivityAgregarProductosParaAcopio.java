@@ -114,7 +114,7 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
                             objectIntent.putExtra("iptProductoCosto", precioconfiguracion_input.getText());
                             objectIntent.putExtra("iptProductoCantidad", cantidadproductoparaacopio_input.getText());
 
-                            calculoSubTotalPartida = Double.parseDouble(cantidadproductoparaacopio_input.getText().toString()) * Double.parseDouble(precioconfiguracion_input.getText().toString());
+                            calculoSubTotalPartida = Double.parseDouble(String.format(cantidadproductoparaacopio_input.getText().toString(), "%.2f")) * Double.parseDouble(String.format(precioconfiguracion_input.getText().toString(), "%.2f"));
 
                             objectIntent.putExtra("iptSubTotalPartida", calculoSubTotalPartida.toString());
 
@@ -160,7 +160,7 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
             valores.put(Transacciones.AcopioPartidaProductoDescripcion, parPeProductoNombre);
             valores.put(Transacciones.AcopioPartidaProductoCantidad, Double.parseDouble(cantidadproductoparaacopio_input.getText().toString()));
             valores.put(Transacciones.AcopioPartidaProductoPrecio, Double.parseDouble(precioconfiguracion_input.getText().toString()));
-            valores.put(Transacciones.AcopioPartidaProductoSubTotal, calculoSubTotalPartida);
+            valores.put(Transacciones.AcopioPartidaProductoSubTotal, Double.parseDouble(String.format(calculoSubTotalPartida.toString(), "%.2f")));
 
             Long resultado = db.insert(Transacciones.tablaacopiopartidatmp, null, valores);
 

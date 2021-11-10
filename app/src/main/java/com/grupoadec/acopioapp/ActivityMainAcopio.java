@@ -1,13 +1,16 @@
 package com.grupoadec.acopioapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,6 +38,8 @@ public class ActivityMainAcopio extends AppCompatActivity {
     ListaAcopioPartidaTemporalAdapter objectAdapter;
 
     Double subTotal = 0.00, impuesto = 0.00, total = 0.00;
+    String [] objectListItem;
+    AlertDialog.Builder objectAlertDialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,8 @@ public class ActivityMainAcopio extends AppCompatActivity {
             subtotalacopio_input = (EditText) findViewById(R.id.subtotalacopio_input);
             impuestosacopio_input = (EditText) findViewById(R.id.impuestosacopio_input);
             totalacopio_input = (EditText) findViewById(R.id.totalacopio_input);
+
+            objectAlertDialogBuilder = new AlertDialog.Builder(this);
 
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
             dispositivoId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -87,9 +94,40 @@ public class ActivityMainAcopio extends AppCompatActivity {
             objectAdapter = new ListaAcopioPartidaTemporalAdapter(this,objectArrayListTablaAcopioPartidaTemporalLista);
             acopio_listview.setAdapter(objectAdapter);
 
-            subtotalacopio_input.setText(subTotal.toString());
-            impuestosacopio_input.setText(impuesto.toString());
-            totalacopio_input.setText(total.toString());
+            acopio_listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    TablaAcopioPartidaTemporal tp = objectArrayListTablaAcopioPartidaTemporalLista.get(i);
+                    String tpProducto = tp.getAcopioPartidaProductoClave();
+                    String tpDescripcion = tp.getAcopioPartidaProductoDescripcion();
+
+                    objectListItem = new String[]{"Editar cantidad o precio","Eliminar producto del recibo"};
+                    objectAlertDialogBuilder.setTitle("Seleccione un opcion");
+                    objectAlertDialogBuilder.setSingleChoiceItems(objectListItem, -1, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if(objectListItem[i] == "Editar cantidad o precio"){
+                                Toast.makeText(getApplicationContext(),"Ha seleccionado editar el item: " + tpProducto + " " + tpDescripcion, Toast.LENGTH_SHORT).show();
+                                dialogInterface.dismiss();
+                            }else if(objectListItem[i] == "Eliminar producto del recibo"){
+                                Toast.makeText(getApplicationContext(),"Ha seleccionado eliminar el item: " + tpProducto + " " + tpDescripcion, Toast.LENGTH_SHORT).show();
+                                dialogInterface.dismiss();
+                            }
+                        }
+                    });
+                    objectAlertDialogBuilder.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    objectAlertDialogBuilder.create();
+                    objectAlertDialogBuilder.show();
+                    return false;
+                }
+            });
 
             btnvolveractivityproductoreslistview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -236,6 +274,10 @@ public class ActivityMainAcopio extends AppCompatActivity {
         objectSqLiteConexion.close();
 
         total = subTotal + impuesto;
+
+        subtotalacopio_input.setText(String.format(subTotal.toString(), "%.2f"));
+        impuestosacopio_input.setText(String.format(impuesto.toString(),"%.2f"));
+        totalacopio_input.setText(String.format(total.toString(), "%.2f"));
 
     }
 

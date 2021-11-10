@@ -59,6 +59,7 @@ public class ListaProductosAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+
         return objectArrayListTablaProductos.size();
     }
 

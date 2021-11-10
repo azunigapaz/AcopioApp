@@ -84,9 +84,7 @@ public class ActivityRegistro extends AppCompatActivity {
                                             } catch (NoSuchAlgorithmException e) {
                                                 e.printStackTrace();
                                             }
-
-                                            Toast.makeText(getApplicationContext(),"Usuario registrado",
-                                                    Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(getApplicationContext(),"Usuario registrado",Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -163,11 +161,11 @@ public class ActivityRegistro extends AppCompatActivity {
                 Long resultado = db.insert(Transacciones.tablausuarios, Transacciones.UsuarioId, valores);
 
                 if(resultado != -1){
-                    Toast.makeText(getApplicationContext(),"Usuario registrado con el id: " + resultado.toString(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Usuario registrado con el id: " + resultado.toString(),Toast.LENGTH_SHORT).show();
                     db.close();
                     LimpiarPantalla();
                 }else{
-                    Toast.makeText(getApplicationContext(),"El usuario no pudo ser registrado en la DB ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"El usuario no pudo ser registrado en la DB ",Toast.LENGTH_SHORT).show();
                 }
             }
         }catch (Exception e){

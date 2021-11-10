@@ -90,4 +90,21 @@ public class Transacciones {
 
     public static final String DropTableConfiguraciones = "DROP TABLE IF EXISTS tblconfiguraciones";
 
+    // tabla acopio partida temporal
+    public static final String tablaacopiopartidatmp = "tblacopiopartidatmp";
+    // campos de la tabla acopio partida temporal
+    public static final String AcopioPartidaNo = "AcopioPartidaNo";
+    public static final String AcopioPartidaProductoClave = "AcopioPartidaProductoClave";
+    public static final String AcopioPartidaProductoDescripcion = "AcopioPartidaProductoDescripcion";
+    public static final String AcopioPartidaProductoCantidad = "AcopioPartidaProductoCantidad";
+    public static final String AcopioPartidaProductoPrecio = "AcopioPartidaProductoPrecio";
+    public static final String AcopioPartidaProductoSubTotal = "AcopioPartidaProductoSubTotal";
+
+    // DDL
+    public static final String CreateTableAcopioPartidaTmp = "CREATE TABLE tblacopiopartidatmp (AcopioPartidaNo INT," +
+            "AcopioPartidaProductoClave VARCHAR(16), AcopioPartidaProductoDescripcion VARCHAR(40), AcopioPartidaProductoCantidad DECIMAL(18,6),"+
+            "AcopioPartidaProductoPrecio DECIMAL(18,6), AcopioPartidaProductoSubTotal DECIMAL(18,6))";
+
+    public static final String DropTableAcopioPartidaTmp = "DROP TABLE IF EXISTS tblacopiopartidatmp";
+
 }

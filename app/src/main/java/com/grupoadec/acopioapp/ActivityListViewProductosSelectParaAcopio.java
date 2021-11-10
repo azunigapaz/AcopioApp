@@ -29,7 +29,6 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
     SQLiteConexion objectSqLiteConexion;
     ListView objectListViewConsultaProductos;
     ArrayList<TablaProductos> objectArrayListTablaProductosLista = new ArrayList<>();
-    ArrayList<String> objectArrayListStringProductos;
     TablaProductos objectTablaProveedoresListaProductos = null;
     EditText objectEditTextBusquedaproductosparaacopio_input;
     ImageView btnvolveractivitymain;

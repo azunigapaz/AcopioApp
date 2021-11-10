@@ -117,6 +117,8 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
                     objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
                     objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
 
+                    objectIntent.putExtra("iPeNuevaFactura", "1");
+
                     startActivity(objectIntent);
                     finish();
                 }

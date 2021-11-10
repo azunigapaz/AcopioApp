@@ -35,6 +35,7 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         db.execSQL(Transacciones.CreateTableProductos);
         db.execSQL(Transacciones.CreateTableAlmacenes);
         db.execSQL(Transacciones.CreateTableConfiguraciones);
+        db.execSQL(Transacciones.CreateTableAcopioPartidaTmp);
     }
 
     @Override
@@ -45,6 +46,7 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         db.execSQL(Transacciones.DropTableProductos);
         db.execSQL(Transacciones.DropTableAlmacenes);
         db.execSQL(Transacciones.DropTableConfiguraciones);
+        db.execSQL(Transacciones.DropTableAcopioPartidaTmp);
 
         // Cramos nuevamente las tablas
         onCreate(db);

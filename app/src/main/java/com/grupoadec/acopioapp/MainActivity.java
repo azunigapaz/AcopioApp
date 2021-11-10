@@ -205,10 +205,11 @@ public class MainActivity extends AppCompatActivity {
                                         objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
                                         objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
                                         objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
                                         objectIntent.putExtra("ipeAlmacenClave", AlmacenClave);
                                         objectIntent.putExtra("ipeAlmacenDescripcion", AlmacenDescripcion);
 
-                                        Toast.makeText(MainActivity.this,"Ha seleccionado el almacen: " + AlmacenClave + " " + AlmacenDescripcion, Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(MainActivity.this,"Ha seleccionado el almacen: " + AlmacenClave + " " + AlmacenDescripcion, Toast.LENGTH_SHORT).show();
 
                                         startActivity(objectIntent);
                                         finish();

@@ -127,7 +127,7 @@
         <ListView
             android:id="@+id/acopio_listview"
             android:layout_width="match_parent"
-            android:layout_height="259dp"
+            android:layout_height="256dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:scrollbarAlwaysDrawVerticalTrack="true"
@@ -155,8 +155,10 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtsubtotalacopio"
@@ -194,8 +196,10 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtimpuestosacopio"
@@ -233,8 +237,10 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txttotalacopio"

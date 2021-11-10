@@ -14,8 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.grupoadec.acopioapp.Adaptadores.ListaAcopioPartidaTemporalAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
+import com.grupoadec.acopioapp.Models.TablaAcopioPartidaTemporal;
+
+import java.util.ArrayList;
 
 public class ActivityMainAcopio extends AppCompatActivity {
     // declaracion de variables
@@ -26,6 +30,11 @@ public class ActivityMainAcopio extends AppCompatActivity {
     SQLiteConexion objectSqLiteConexion;
     String dispositivoId;
 
+    ArrayList<TablaAcopioPartidaTemporal> objectArrayListTablaAcopioPartidaTemporalLista = new ArrayList<>();
+    TablaAcopioPartidaTemporal objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal = null;
+    ListaAcopioPartidaTemporalAdapter objectAdapter;
+
+    Double subTotal = 0.00, impuesto = 0.00, total = 0.00;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +75,21 @@ public class ActivityMainAcopio extends AppCompatActivity {
             String parPeProveedorNombre = getIntent().getStringExtra("iptProveedorNombre");
             String parPeProveedorRtn = getIntent().getStringExtra("iptProveedorRtn");
 
+            String parPeValidacionNuevaFactura = getIntent().getStringExtra("iPeNuevaFactura");
+
             textViewProveedorAcopio.setText(parPeProveedorClave.trim() + "-" + parPeProveedorNombre);
+
+            if(parPeValidacionNuevaFactura.equals("1")){
+                ElminarProductoAcopioPartidaTemporal();
+            }
+
+            ObtenerListaAcopioPartidasTemporal();
+            objectAdapter = new ListaAcopioPartidaTemporalAdapter(this,objectArrayListTablaAcopioPartidaTemporalLista);
+            acopio_listview.setAdapter(objectAdapter);
+
+            subtotalacopio_input.setText(subTotal.toString());
+            impuestosacopio_input.setText(impuesto.toString());
+            totalacopio_input.setText(total.toString());
 
             btnvolveractivityproductoreslistview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,6 +134,31 @@ public class ActivityMainAcopio extends AppCompatActivity {
 
                 }
             });
+
+            btnguardaracopio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try{
+                        Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
+
+                        objectIntent.putExtra("iPeNombres", parPeNombres);
+                        objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                        objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                        objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                        objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                        objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                        objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                        objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                        ElminarProductoAcopioPartidaTemporal();
+
+                        startActivity(objectIntent);
+                        finish();
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }catch (Exception e){
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -152,4 +200,43 @@ public class ActivityMainAcopio extends AppCompatActivity {
         }
         return ls_Resultado;
     }
+
+    private void ElminarProductoAcopioPartidaTemporal() {
+        SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+
+        Cursor objectCursor = db.rawQuery("SELECT * FROM " + Transacciones.tablaacopiopartidatmp, null);
+
+        if(objectCursor.moveToNext()){
+            db.delete(Transacciones.tablaacopiopartidatmp, null, null);
+            db.close();
+        }
+        objectCursor.close();
+    }
+
+    private void ObtenerListaAcopioPartidasTemporal() {
+        SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getReadableDatabase();
+
+        Cursor objectCursor = objectSqLiteDatabase.rawQuery("SELECT * FROM " + Transacciones.tablaacopiopartidatmp, null);
+
+        while (objectCursor.moveToNext()){
+            objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal = new TablaAcopioPartidaTemporal();
+            objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal.setAcopioPartidaNo(objectCursor.getInt(0));
+            objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal.setAcopioPartidaProductoClave(objectCursor.getString(1));
+            objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal.setAcopioPartidaProductoDescripcion(objectCursor.getString(2));
+            objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal.setAcopioPartidaProductoCantidad(objectCursor.getDouble(3));
+            objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal.setAcopioPartidaProductoPrecio(objectCursor.getDouble(4));
+            objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal.setAcopioPartidaProductoSubTotal(objectCursor.getDouble(5));
+
+            objectArrayListTablaAcopioPartidaTemporalLista.add(objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal);
+
+            subTotal = subTotal + objectCursor.getDouble(5);
+        }
+
+        objectCursor.close();
+        objectSqLiteConexion.close();
+
+        total = subTotal + impuesto;
+
+    }
+
 }

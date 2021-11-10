@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,7 +29,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
-import com.grupoadec.acopioapp.models.TablaAlmacenes;
+import com.grupoadec.acopioapp.Models.TablaAlmacenes;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +37,6 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import android.provider.Settings.Secure;
@@ -370,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }else{
                 Toast.makeText(this, "No existen registros de usuarios en la base de datos", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
 
             // subir configuraciones
@@ -444,6 +443,7 @@ public class MainActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }else{
                 Toast.makeText(this, "No existen registros de configuración en la base de datos", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
 
 

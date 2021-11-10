@@ -16,22 +16,24 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.grupoadec.acopioapp.Adaptadores.ListaProductosAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
-import com.grupoadec.acopioapp.models.TablaProductos;
-import com.grupoadec.acopioapp.models.TablaProveedores;
+import com.grupoadec.acopioapp.Models.TablaProductos;
 
 import java.util.ArrayList;
 
 public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity {
+
     // declaracion de variables
     SQLiteConexion objectSqLiteConexion;
     ListView objectListViewConsultaProductos;
-    final ArrayList<TablaProductos> objectArrayListTablaProductosLista = new ArrayList<>();
+    ArrayList<TablaProductos> objectArrayListTablaProductosLista = new ArrayList<>();
     ArrayList<String> objectArrayListStringProductos;
     TablaProductos objectTablaProveedoresListaProductos = null;
     EditText objectEditTextBusquedaproductosparaacopio_input;
     ImageView btnvolveractivitymain;
+    ListaProductosAdapter objectAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,14 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
             String parPeAccesoRegistroAcopio = getIntent().getStringExtra("iPeAccesoRegistroAcopio");
             String parPeAccesoRegistroProductores = getIntent().getStringExtra("iPeAccesoRegistroProductores");
 
+            String parPeProveedorClave = getIntent().getStringExtra("iptProveedorClave");
+            String parPeProveedorNombre = getIntent().getStringExtra("iptProveedorNombre");
+            String parPeProveedorRtn = getIntent().getStringExtra("iptProveedorRtn");
+
             ObtenerListaProductos();
 
-            ArrayAdapter objectArrayAdapterListaProductos = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1,objectArrayListStringProductos);
-            objectListViewConsultaProductos.setAdapter(objectArrayAdapterListaProductos);
+            objectAdapter = new ListaProductosAdapter(this,objectArrayListTablaProductosLista);
+            objectListViewConsultaProductos.setAdapter(objectAdapter);
 
             objectEditTextBusquedaproductosparaacopio_input.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -68,7 +74,7 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    objectArrayAdapterListaProductos.getFilter().filter(charSequence);
+                    objectAdapter.filtrarProductoDescripcionCodigo(charSequence);
                 }
 
                 @Override
@@ -91,6 +97,10 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
                     objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
                     objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
 
+                    objectIntent.putExtra("iptProveedorClave", parPeProveedorClave);
+                    objectIntent.putExtra("iptProveedorNombre", parPeProveedorNombre);
+                    objectIntent.putExtra("iptProveedorRtn", parPeProveedorRtn);
+
                     startActivity(objectIntent);
                     finish();
                 }
@@ -100,7 +110,7 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     TablaProductos tp = objectArrayListTablaProductosLista.get(i);
-                    Intent objectIntent = new Intent(getApplicationContext(),ActivityMainAcopio.class);
+                    Intent objectIntent = new Intent(getApplicationContext(),ActivityAgregarProductosParaAcopio.class);
                     objectIntent.putExtra("iptProductoClave", tp.getProductoClave());
                     objectIntent.putExtra("iptProductoNombre", tp.getProductoDescripcion());
                     objectIntent.putExtra("iptProductoCosto", tp.getProductoCosto().toString());
@@ -113,6 +123,10 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
                     objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
                     objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
                     objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                    objectIntent.putExtra("iptProveedorClave", parPeProveedorClave);
+                    objectIntent.putExtra("iptProveedorNombre", parPeProveedorNombre);
+                    objectIntent.putExtra("iptProveedorRtn", parPeProveedorRtn);
 
                     startActivity(objectIntent);
                     finish();
@@ -142,15 +156,6 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
         objectCursor.close();
         objectSqLiteConexion.close();
 
-        LlenarListaProductos();
     }
 
-    private void LlenarListaProductos() {
-        objectArrayListStringProductos = new ArrayList<String>();
-        for(int i = 0; i < objectArrayListTablaProductosLista.size(); i++){
-            objectArrayListStringProductos.add(objectArrayListTablaProductosLista.get(i).getProductoClave() + " | " +
-                    objectArrayListTablaProductosLista.get(i).getProductoDescripcion() + " | " +
-                    objectArrayListTablaProductosLista.get(i).getProductoCosto());
-        }
-    }
 }

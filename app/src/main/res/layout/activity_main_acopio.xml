@@ -43,6 +43,7 @@
             android:background="@drawable/cacao_border_rounded_cornwe_black">
 
             <TextView
+                android:id="@+id/textViewNoReciboAcopio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/facturaacopio_icon"
@@ -52,7 +53,7 @@
                 android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text=" No. Factura"
+                android:text=" No. Recibo"
                 android:textSize="15dp" />
 
             <!-- ICON FACTURA -->
@@ -74,16 +75,17 @@
             android:background="@drawable/cacao_border_rounded_cornwe_black">
 
             <TextView
+                android:id="@+id/textViewProveedorAcopio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/carnetproveedor_icon"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
-                android:text=" Nombre Proveedor"
                 android:maxLines="1"
                 android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:text=" Nombre Proveedor"
                 android:textSize="15dp" />
 
             <!-- ICON PROVEEDOR -->
@@ -182,16 +184,16 @@
                 android:id="@+id/impuestosacopio_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:layout_toRightOf="@+id/txtimpuestosacopio"
                 android:background="@android:color/transparent"
+                android:focusable="false"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="Impuestos"
                 android:inputType="none"
-                android:focusable="false"
                 android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp" />
 
@@ -221,16 +223,16 @@
                 android:id="@+id/totalacopio_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:layout_toRightOf="@+id/txttotalacopio"
                 android:background="@android:color/transparent"
+                android:focusable="false"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="Total"
                 android:inputType="none"
-                android:focusable="false"
                 android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp" />
 

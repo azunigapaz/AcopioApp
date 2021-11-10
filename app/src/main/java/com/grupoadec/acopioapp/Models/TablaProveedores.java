@@ -1,4 +1,4 @@
-package com.grupoadec.acopioapp.models;
+package com.grupoadec.acopioapp.Models;
 
 public class TablaProveedores {
     private String ProveedorClave;

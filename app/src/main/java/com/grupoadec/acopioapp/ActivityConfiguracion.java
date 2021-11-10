@@ -132,7 +132,7 @@ public class ActivityConfiguracion extends AppCompatActivity {
     private void GuardarConfiguracion() {
         try {
             SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
-            String ConsultaSql = "SELECT * FROM " + Transacciones.tablaconfiguraciones;
+            String ConsultaSql = "SELECT * FROM " + Transacciones.tablaconfiguraciones + " WHERE ConfiguracionId = '" + dispositivoId + "'";
 
             Cursor objectCursor = objectSqLiteDatabase.rawQuery(ConsultaSql,null);
 

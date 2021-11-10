@@ -16,9 +16,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.grupoadec.acopioapp.Adaptadores.ListaProductoresAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
-import com.grupoadec.acopioapp.models.TablaProveedores;
+import com.grupoadec.acopioapp.Models.TablaProveedores;
 
 import java.util.ArrayList;
 
@@ -27,11 +28,12 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
     // definicion de variables
     SQLiteConexion objectSqLiteConexion;
     ListView objectListViewConsultaProveedores;
-    final ArrayList<TablaProveedores> objectArrayListTablaProveedoresLista = new ArrayList<>();
+    ArrayList<TablaProveedores> objectArrayListTablaProveedoresLista = new ArrayList<>();
     ArrayList<String> objectArrayListStringProveedores;
     TablaProveedores objectTablaProveedoresListaProveedores = null;
     EditText objectEditTextBuscarproveedores_input;
     ImageView objectImageViewBtnvolveractivitymain;
+    ListaProductoresAdapter objectAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,8 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
 
             ObtenerListaProveedores();
 
-            ArrayAdapter objectArrayAdapterListaProveedores = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1,objectArrayListStringProveedores);
-            objectListViewConsultaProveedores.setAdapter(objectArrayAdapterListaProveedores);
+            objectAdapter = new ListaProductoresAdapter(this,objectArrayListTablaProveedoresLista);
+            objectListViewConsultaProveedores.setAdapter(objectAdapter);
 
             objectEditTextBuscarproveedores_input.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -67,7 +69,7 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    objectArrayAdapterListaProveedores.getFilter().filter(charSequence);
+                    objectAdapter.filtrarProveedorNombreRtn(charSequence);
                 }
 
                 @Override
@@ -98,11 +100,13 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
             objectListViewConsultaProveedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                     TablaProveedores tp = objectArrayListTablaProveedoresLista.get(i);
+
                     Intent objectIntent = new Intent(getApplicationContext(),ActivityMainAcopio.class);
                     objectIntent.putExtra("iptProveedorClave", tp.getProveedorClave());
                     objectIntent.putExtra("iptProveedorNombre", tp.getProveedorNombre());
-                    objectIntent.putExtra("iptProveedorNombre", tp.getProveedorRtn());
+                    objectIntent.putExtra("iptProveedorRtn", tp.getProveedorRtn());
 
                     objectIntent.putExtra("iPeNombres", parPeNombres);
                     objectIntent.putExtra("iPeApellidos", parPeApellidos);
@@ -121,7 +125,6 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
         }catch (Exception e){
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void ObtenerListaProveedores() {
@@ -148,20 +151,8 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
             objectCursor.close();
             objectSqLiteConexion.close();
 
-            LlenarListaProveedores();
-
         }catch (Exception e){
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void LlenarListaProveedores() {
-        objectArrayListStringProveedores = new ArrayList<String>();
-        for(int i = 0; i < objectArrayListTablaProveedoresLista.size(); i++){
-            objectArrayListStringProveedores.add(objectArrayListTablaProveedoresLista.get(i).getProveedorClave() + " | " +
-                    objectArrayListTablaProveedoresLista.get(i).getProveedorNombre() + " | " +
-                    objectArrayListTablaProveedoresLista.get(i).getProveedorRtn() + " | " +
-                    objectArrayListTablaProveedoresLista.get(i).getProveedorCalle());
         }
     }
 }

@@ -4,7 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Alejandro/AndroidStudioProjects/AcopioApp/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_agregar_productos_para_acopio.xml" value="0.1265625" />
+        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_agregar_productos_para_acopio.xml" value="0.4" />
         <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_configuracion.xml" value="0.264" />
         <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_list_view_productos_select_para_acopio.xml" value="0.264" />
         <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_list_view_proveedores_select.xml" value="0.264" />
@@ -13,6 +13,8 @@
         <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_main_acopio.xml" value="0.213768115942029" />
         <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_registro.xml" value="0.264" />
         <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/custom_spinner_dialog.xml" value="0.19972826086956522" />
+        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/elementos_custom_view_proveedores.xml" value="0.4" />
+        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/elementos_customview_productos.xml" value="0.4" />
       </map>
     </option>
   </component>

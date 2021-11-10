@@ -1,4 +1,4 @@
-package com.grupoadec.acopioapp.models;
+package com.grupoadec.acopioapp.Models;
 
 public class TablaUsuarios {
     private String UsuarioId;

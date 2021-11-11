@@ -3,12 +3,14 @@ package com.grupoadec.acopioapp;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -39,7 +41,16 @@ public class ActivityMainAcopio extends AppCompatActivity {
 
     Double subTotal = 0.00, impuesto = 0.00, total = 0.00;
     String [] objectListItem;
-    AlertDialog.Builder objectAlertDialogBuilder;
+    AlertDialog.Builder objectAlertDialogBuilderOpciones;
+    AlertDialog.Builder objectAlertDialogBuilderOpcionesCantidadPrecio;
+
+    String validarAccionTipo="";
+
+    Integer tpPartidaNumero;
+    String tpPartidaProductoClave;
+    String tpPartidaProductoDescripcion;
+    Double tpPartidaProductoCantidad;
+    Double tpPartidaProductoPrecio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +71,8 @@ public class ActivityMainAcopio extends AppCompatActivity {
             impuestosacopio_input = (EditText) findViewById(R.id.impuestosacopio_input);
             totalacopio_input = (EditText) findViewById(R.id.totalacopio_input);
 
-            objectAlertDialogBuilder = new AlertDialog.Builder(this);
+            objectAlertDialogBuilderOpciones = new AlertDialog.Builder(this);
+            objectAlertDialogBuilderOpcionesCantidadPrecio = new AlertDialog.Builder(this);
 
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
             dispositivoId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -98,33 +110,114 @@ public class ActivityMainAcopio extends AppCompatActivity {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    TablaAcopioPartidaTemporal tp = objectArrayListTablaAcopioPartidaTemporalLista.get(i);
-                    String tpProducto = tp.getAcopioPartidaProductoClave();
-                    String tpDescripcion = tp.getAcopioPartidaProductoDescripcion();
+                    try{
+                        TablaAcopioPartidaTemporal tp = objectArrayListTablaAcopioPartidaTemporalLista.get(i);
+                        tpPartidaNumero = tp.getAcopioPartidaNo();
+                        tpPartidaProductoClave = tp.getAcopioPartidaProductoClave();
+                        tpPartidaProductoDescripcion = tp.getAcopioPartidaProductoDescripcion();
+                        tpPartidaProductoCantidad = tp.getAcopioPartidaProductoCantidad();
+                        tpPartidaProductoPrecio = tp.getAcopioPartidaProductoPrecio();
 
-                    objectListItem = new String[]{"Editar cantidad o precio","Eliminar producto del recibo"};
-                    objectAlertDialogBuilder.setTitle("Seleccione un opcion");
-                    objectAlertDialogBuilder.setSingleChoiceItems(objectListItem, -1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(objectListItem[i] == "Editar cantidad o precio"){
-                                Toast.makeText(getApplicationContext(),"Ha seleccionado editar el item: " + tpProducto + " " + tpDescripcion, Toast.LENGTH_SHORT).show();
-                                dialogInterface.dismiss();
-                            }else if(objectListItem[i] == "Eliminar producto del recibo"){
-                                Toast.makeText(getApplicationContext(),"Ha seleccionado eliminar el item: " + tpProducto + " " + tpDescripcion, Toast.LENGTH_SHORT).show();
+                        objectListItem = new String[]{"Editar cantidad","Editar precio","Eliminar producto del recibo"};
+                        objectAlertDialogBuilderOpciones.setTitle("Seleccione un opcion");
+                        objectAlertDialogBuilderOpciones.setSingleChoiceItems(objectListItem, -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if(objectListItem[i] == "Editar cantidad"){
+                                    // 1 = Agregar, 2 = Modificar
+                                    validarAccionTipo = "2";
+
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setTitle("Ingrese la cantidad");
+
+                                    final EditText cantidadInput = new EditText(getApplicationContext());
+                                    cantidadInput.setInputType(InputType.TYPE_CLASS_PHONE);
+
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setView(cantidadInput);
+
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            tpPartidaProductoCantidad = Double.parseDouble(cantidadInput.getText().toString());
+
+                                            ActualizarCantidadFilaListViewAcopio(tpPartidaNumero);
+                                            objectArrayListTablaAcopioPartidaTemporalLista.clear();
+
+                                            ObtenerListaAcopioPartidasTemporal();
+
+                                            objectAdapter = new ListaAcopioPartidaTemporalAdapter(getApplicationContext(),objectArrayListTablaAcopioPartidaTemporalLista);
+                                            acopio_listview.setAdapter(objectAdapter);
+
+                                        }
+                                    });
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.cancel();
+                                        }
+                                    });
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.show();
+
+                                    dialogInterface.dismiss();
+
+                                }else if(objectListItem[i] == "Eliminar producto del recibo"){
+                                    //Si selecciona la opcion eliminar
+                                    EliminarFilaListViewAcopio(tpPartidaNumero);
+                                    objectArrayListTablaAcopioPartidaTemporalLista.clear();
+
+                                    ObtenerListaAcopioPartidasTemporal();
+
+                                    objectAdapter = new ListaAcopioPartidaTemporalAdapter(getApplicationContext(),objectArrayListTablaAcopioPartidaTemporalLista);
+                                    acopio_listview.setAdapter(objectAdapter);
+
+                                    dialogInterface.dismiss();
+                                }else if(objectListItem[i] == "Editar precio"){
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setTitle("Ingrese el precio");
+
+                                    final EditText cantidadInput = new EditText(getApplicationContext());
+                                    cantidadInput.setInputType(InputType.TYPE_CLASS_PHONE);
+
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setView(cantidadInput);
+
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            tpPartidaProductoPrecio = Double.parseDouble(cantidadInput.getText().toString());
+
+                                            ActualizarPrecioFilaListViewAcopio(tpPartidaNumero);
+                                            objectArrayListTablaAcopioPartidaTemporalLista.clear();
+
+                                            ObtenerListaAcopioPartidasTemporal();
+
+                                            objectAdapter = new ListaAcopioPartidaTemporalAdapter(getApplicationContext(),objectArrayListTablaAcopioPartidaTemporalLista);
+                                            acopio_listview.setAdapter(objectAdapter);
+
+                                        }
+                                    });
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.cancel();
+                                        }
+                                    });
+                                    objectAlertDialogBuilderOpcionesCantidadPrecio.show();
+
+                                    dialogInterface.dismiss();
+                                }
+                            }
+                        });
+                        objectAlertDialogBuilderOpciones.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
                             }
-                        }
-                    });
-                    objectAlertDialogBuilder.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
+                        });
 
-                    objectAlertDialogBuilder.create();
-                    objectAlertDialogBuilder.show();
+                        objectAlertDialogBuilderOpciones.create();
+                        objectAlertDialogBuilderOpciones.show();
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
                     return false;
                 }
             });
@@ -151,6 +244,8 @@ public class ActivityMainAcopio extends AppCompatActivity {
             btnactivityproductosparaacopio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // 1 = Agregar, 2 = Modificar
+                    validarAccionTipo = "1";
 
                     Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProductosSelectParaAcopio.class);
 
@@ -166,6 +261,9 @@ public class ActivityMainAcopio extends AppCompatActivity {
                     objectIntent.putExtra("iptProveedorClave", parPeProveedorClave);
                     objectIntent.putExtra("iptProveedorNombre", parPeProveedorNombre);
                     objectIntent.putExtra("iptProveedorRtn", parPeProveedorRtn);
+
+                    // 1 = Agregar, 2 = Modificar
+                    objectIntent.putExtra("iptAccionTipo", validarAccionTipo);
 
                     startActivity(objectIntent);
                     finish();
@@ -278,7 +376,53 @@ public class ActivityMainAcopio extends AppCompatActivity {
         subtotalacopio_input.setText(String.format(subTotal.toString(), "%.2f"));
         impuestosacopio_input.setText(String.format(impuesto.toString(),"%.2f"));
         totalacopio_input.setText(String.format(total.toString(), "%.2f"));
+    }
 
+    private void EliminarFilaListViewAcopio(Integer filaNumero) {
+        SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+        String [] params = { filaNumero.toString() };
+        String wherecond = Transacciones.AcopioPartidaNo + "=?";
+        db.delete(Transacciones.tablaacopiopartidatmp, wherecond, params);
+
+        db.close();
+
+        subTotal = 0.00;
+        impuesto = 0.00;
+        total = 0.00;
+    }
+
+    private void ActualizarCantidadFilaListViewAcopio(Integer filaNumero){
+        SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+
+        String [] params = { filaNumero.toString() };
+
+        ContentValues valores = new ContentValues();
+        valores.put(Transacciones.AcopioPartidaProductoCantidad, tpPartidaProductoCantidad);
+        valores.put(Transacciones.AcopioPartidaProductoSubTotal, tpPartidaProductoCantidad * tpPartidaProductoPrecio);
+        db.update(Transacciones.tablaacopiopartidatmp, valores, Transacciones.AcopioPartidaNo + "=?", params);
+
+        db.close();
+
+        subTotal = 0.00;
+        impuesto = 0.00;
+        total = 0.00;
+    }
+
+    private void ActualizarPrecioFilaListViewAcopio(Integer filaNumero){
+        SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+
+        String [] params = { filaNumero.toString() };
+
+        ContentValues valores = new ContentValues();
+        valores.put(Transacciones.AcopioPartidaProductoPrecio, tpPartidaProductoPrecio);
+        valores.put(Transacciones.AcopioPartidaProductoSubTotal, tpPartidaProductoCantidad * tpPartidaProductoPrecio);
+        db.update(Transacciones.tablaacopiopartidatmp, valores, Transacciones.AcopioPartidaNo + "=?", params);
+
+        db.close();
+
+        subTotal = 0.00;
+        impuesto = 0.00;
+        total = 0.00;
     }
 
 }

@@ -36,6 +36,12 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         db.execSQL(Transacciones.CreateTableAlmacenes);
         db.execSQL(Transacciones.CreateTableConfiguraciones);
         db.execSQL(Transacciones.CreateTableAcopioPartidaTmp);
+        // create compras
+        db.execSQL(Transacciones.tablacomprasencabezado);
+        db.execSQL(Transacciones.tablacompraspartida);
+        db.execSQL(Transacciones.tablacuentasporpagarconceptos);
+        db.execSQL(Transacciones.tablacuentasporpagarencabezado);
+        db.execSQL(Transacciones.tablacuentasporpagardetalle);
     }
 
     @Override
@@ -47,6 +53,12 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         db.execSQL(Transacciones.DropTableAlmacenes);
         db.execSQL(Transacciones.DropTableConfiguraciones);
         db.execSQL(Transacciones.DropTableAcopioPartidaTmp);
+        // drop compras
+        db.execSQL(Transacciones.DropTableComprasEncabezado);
+        db.execSQL(Transacciones.DropTableComprasPartida);
+        db.execSQL(Transacciones.DropTableCuentasPorPagarConceptos);
+        db.execSQL(Transacciones.DropTableCuentasPorPagarEncabezado);
+        db.execSQL(Transacciones.DropTableCuentasPorPagarDetalle);
 
         // Cramos nuevamente las tablas
         onCreate(db);

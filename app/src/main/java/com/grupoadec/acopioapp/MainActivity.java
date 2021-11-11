@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
-    String HttpURI = "http://192.168.68.104/ApiSaeAppAcopio/assets/php/apicrud.php";
+    String HttpURI = "http://192.168.0.146/ApiSaeAppAcopio/assets/php/apicrud.php";
 
     SQLiteConexion objectSqLiteConexion;
 
@@ -999,6 +999,113 @@ public class MainActivity extends AppCompatActivity {
 
             // ejecutamos la cadena
             requestQueue.add(stringRequestBajarConfiguraciones);
+
+
+            // Bajar datos de conceptos cuentas por pagar
+            StringRequest stringRequestBajarConceptosCxp = new StringRequest(Request.Method.POST, HttpURI,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String serverResponse) {
+                            // recibimos la respuesta del web services
+                            try{
+                                JSONObject jsonObject = new JSONObject(serverResponse);
+                                JSONArray objectJsonArrayTablaConceptosCxp = jsonObject.getJSONArray("tablaconceptoscxp");
+
+                                SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
+
+                                Cursor objectCursor;
+                                String lsConceptoNo,lsConceptoDescripcion,lsConceptoTipo,lsConceptoConRefer,lsConceptoSigno,lsConceptoEsFormaPago;
+                                String consultaSql;
+
+                                for(int i = 0; i < objectJsonArrayTablaConceptosCxp.length(); i++){
+                                    JSONObject objectJsonConceptosCxp = objectJsonArrayTablaConceptosCxp.getJSONObject(i);
+                                    lsConceptoNo = objectJsonConceptosCxp.getString("NUM_CPTO");
+                                    lsConceptoDescripcion = objectJsonConceptosCxp.getString("DESCR");
+                                    lsConceptoTipo = objectJsonConceptosCxp.getString("TIPO");
+                                    lsConceptoConRefer = objectJsonConceptosCxp.getString("CON_REFER");
+                                    lsConceptoSigno = objectJsonConceptosCxp.getString("SIGNO");
+                                    lsConceptoEsFormaPago = objectJsonConceptosCxp.getString("ES_FMA_PAG");
+
+                                    consultaSql = "SELECT * FROM tblcuentasporpagarconceptos WHERE CuentasPorPagarConceptoNumero = " + lsConceptoNo;
+
+                                    objectCursor = objectSqLiteDatabase.rawQuery(consultaSql, null);
+
+                                    if(objectCursor.moveToNext()){
+                                        // si el registro existe en el movil, lo actualizamos
+                                        String [] parametroWhere = { lsConceptoNo };
+                                        ContentValues objectContentValuesUpdateConceptosCxp = new ContentValues();
+                                        objectContentValuesUpdateConceptosCxp.put(Transacciones.CuentasPorPagarConceptoDescripcion, lsConceptoDescripcion);
+                                        objectContentValuesUpdateConceptosCxp.put(Transacciones.CuentasPorPagarConceptoTipo, lsConceptoTipo);
+                                        objectContentValuesUpdateConceptosCxp.put(Transacciones.CuentasPorPagarConceptoConRefer, lsConceptoConRefer);
+                                        objectContentValuesUpdateConceptosCxp.put(Transacciones.CuentasPorPagarConceptoSigno, Integer.parseInt(lsConceptoSigno));
+                                        objectContentValuesUpdateConceptosCxp.put(Transacciones.CuentasPorPagarConceptoEsFormaPago, lsConceptoEsFormaPago);
+
+                                        objectSqLiteDatabase.update(Transacciones.tablacuentasporpagarconceptos,objectContentValuesUpdateConceptosCxp,Transacciones.CuentasPorPagarConceptoNumero + "=?", parametroWhere);
+
+                                    }else{
+                                        // si el registro no existe en el movil, lo insertamos
+                                        ContentValues objectContentValuesInsertConceptosCxp = new ContentValues();
+                                        objectContentValuesInsertConceptosCxp.put(Transacciones.CuentasPorPagarConceptoNumero, Integer.parseInt(lsConceptoNo));
+                                        objectContentValuesInsertConceptosCxp.put(Transacciones.CuentasPorPagarConceptoDescripcion, lsConceptoDescripcion);
+                                        objectContentValuesInsertConceptosCxp.put(Transacciones.CuentasPorPagarConceptoTipo, lsConceptoTipo);
+                                        objectContentValuesInsertConceptosCxp.put(Transacciones.CuentasPorPagarConceptoConRefer, lsConceptoConRefer);
+                                        objectContentValuesInsertConceptosCxp.put(Transacciones.CuentasPorPagarConceptoSigno, Integer.parseInt(lsConceptoSigno));
+                                        objectContentValuesInsertConceptosCxp.put(Transacciones.CuentasPorPagarConceptoEsFormaPago, lsConceptoEsFormaPago);
+
+                                        long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablacuentasporpagarconceptos, null, objectContentValuesInsertConceptosCxp);
+
+                                        if(checkIfQueryRuns!=-1){
+                                            //Toast.makeText(getApplicationContext(), "Configuración almacenada", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), "No se almaceno el concepto", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    // cerramos el cursor
+                                    objectCursor.close();
+                                }
+
+                                // cerramos la conexion
+                                objectSqLiteDatabase.close();
+
+                                // obtenemos las variables declaradas en el webservice
+                                String mensajeApi = jsonObject.getString("mensajeobtenerconceptoscxp");
+                                Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(getApplicationContext(), "Conceptos de Cuentas por pagar actualizados", Toast.LENGTH_SHORT).show();
+
+                                // ocultamos el progressDialog
+                                progressDialog.dismiss();
+
+                            }catch (JSONException ex){
+                                ex.printStackTrace();
+                                progressDialog.dismiss();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // si hay algun error por parte de la libreria Voley
+                    progressDialog.dismiss();
+                    // mostramos el error de la libreria
+                    Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                }
+            }){
+                // el primer paso es enviar los datos al web services, con sus respectivos parametros
+                // se hace un mapeo de un arreglo de 2 dimesiones
+                protected Map<String,String> getParams(){
+                    Map<String,String> parametros = new HashMap<>();
+                    // parametros que enviaremos al web service
+                    parametros.put("opcion", "obtenerconceptoscxp");
+
+                    return parametros;
+                }
+            };
+
+            // ejecutamos la cadena
+            requestQueue.add(stringRequestBajarConceptosCxp);
 
 
         }catch (Exception e){

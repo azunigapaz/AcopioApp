@@ -107,4 +107,98 @@ public class Transacciones {
 
     public static final String DropTableAcopioPartidaTmp = "DROP TABLE IF EXISTS tblacopiopartidatmp";
 
+    // tablas de compras y cuentas por pagar
+    public static final String tablacomprasencabezado = "tblcomprasencabezado";
+    public static final String tablacompraspartida = "tblcompraspartida";
+    public static final String tablacuentasporpagarconceptos = "tblcuentasporpagarconceptos";
+    public static final String tablacuentasporpagarencabezado = "tblcuentasporpagarencabezado";
+    public static final String tablacuentasporpagardetalle = "tblcuentasporpagardetalle";
+    // campos de la tabla encabezado de compras
+    public static final String CompraEncabezadoDocumento = "CompraEncabezadoDocumento";
+    public static final String CompraEncabezadoTipoDocumento = "CompraEncabezadoTipoDocumento";
+    public static final String CompraEncabezadoProveedorClave = "CompraEncabezadoProveedorClave";
+    public static final String CompraEncabezadoEstado = "CompraEncabezadoEstado";
+    public static final String CompraEncabezadoFecha = "CompraEncabezadoFecha";
+    public static final String CompraEncabezadoSubTotal = "CompraEncabezadoSubTotal";
+    public static final String CompraEncabezadoImpuesto = "CompraEncabezadoImpuesto";
+    public static final String CompraEncabezadoTotal = "CompraEncabezadoTotal";
+    public static final String CompraEncabezadoAlmacen = "CompraEncabezadoAlmacen";
+    public static final String CompraEncabezadoFechaHora = "CompraEncabezadoFechaHora";
+    public static final String CompraEncabezadoSincronizado = "CompraEncabezadoSincronizado";
+    // ddl encabezado de compras
+    public static final String CreateTableComprasEncabezado = "CREATE TABLE tblcomprasencabezado (CompraEncabezadoDocumento VARCHAR(20) PRIMARY KEY," +
+            "CompraEncabezadoTipoDocumento VARCHAR(1), CompraEncabezadoProveedorClave VARCHAR(10),CompraEncabezadoEstado VARCHAR(1),CompraEncabezadoFecha DATETIME," +
+            "CompraEncabezadoSubTotal DECIMAL(18,6),CompraEncabezadoImpuesto DECIMAL(18,6),CompraEncabezadoTotal DECIMAL(18,6),CompraEncabezadoAlmacen INT," +
+            "CompraEncabezadoFechaHora DATETIME, CompraEncabezadoSincronizado INT)";
+    public static final String DropTableComprasEncabezado = "DROP TABLE IF EXISTS tblcomprasencabezado";
+
+    // campos de la tabla partida de compras
+    public static final String CompraPartidaTipoDocumento = "CompraPartidaTipoDocumento";
+    public static final String CompraPartidaDocumento = "CompraPartidaDocumento";
+    public static final String CompraPartidaNumeroFila = "CompraPartidaNumeroFila";
+    public static final String CompraPartidaProductoClave = "CompraPartidaProductoClave";
+    public static final String CompraPartidaCantidad = "CompraPartidaCantidad";
+    public static final String CompraPartidaCosto = "CompraPartidaCosto";
+    public static final String CompraPartidaImpuesto = "CompraPartidaImpuesto";
+    public static final String CompraPartidaTotal = "CompraPartidaTotal";
+    public static final String CompraPartidaAlmacen = "CompraPartidaAlmacen";
+    public static final String CompraPartidaSincronizado = "CompraPartidaSincronizado";
+    // ddl partida de compras
+    public static String CreateTableComprasPartida = "CREATE TABLE tblcompraspartida (CompraPartidaTipoDocumento VARCHAR(1),CompraPartidaDocumento VARCHAR(20)," +
+            "CompraPartidaNumeroFila INT, CompraPartidaProductoClave VARCHAR(16), CompraPartidaCantidad NUMERIC(18,6),CompraPartidaCosto NUMERIC(18,6)," +
+            "CompraPartidaImpuesto NUMERIC(18,6), CompraPartidaTotal NUMERIC(18,6), CompraPartidaAlmacen INT, CompraPartidaSincronizado INT)";
+    public static final String DropTableComprasPartida = "DROP TABLE IF EXISTS tblcompraspartida";
+
+    // campos de la tabla conceptos de cuentas por pagar
+    public static final String CuentasPorPagarConceptoNumero = "CuentasPorPagarConceptoNumero";
+    public static final String CuentasPorPagarConceptoDescripcion = "CuentasPorPagarConceptoDescripcion";
+    public static final String CuentasPorPagarConceptoTipo = "CuentasPorPagarConceptoTipo";
+    public static final String CuentasPorPagarConceptoConRefer = "CuentasPorPagarConceptoConRefer";
+    public static final String CuentasPorPagarConceptoSigno = "CuentasPorPagarConceptoSigno";
+    public static final String CuentasPorPagarConceptoEsFormaPago = "CuentasPorPagarConceptoEsFormaPago";
+    // ddl conceptos de compras
+    public static final String CreateTableCuentasPorPagarConceptos = "CREATE TABLE tblcuentasporpagarconceptos (CuentasPorPagarConceptoNumero INT PRIMARY KEY," +
+            "CuentasPorPagarConceptoDescripcion VARCHAR(20), CuentasPorPagarConceptoTipo VARCHAR(1), CuentasPorPagarConceptoConRefer VARCHAR(1), CuentasPorPagarConceptoSigno INT," +
+            "CuentasPorPagarConceptoEsFormaPago VARCHAR(1))";
+    public static final String DropTableCuentasPorPagarConceptos = "DROP TABLE IF EXISTS tblcuentasporpagarconceptos";
+
+    // campos de la tabla cuentas por pagar encabezados
+    public static final String CuentasPorPagarEncabezadoProveedorClave = "CuentasPorPagarEncabezadoProveedorClave";
+    public static final String CuentasPorPagarEncabezadoConcepto = "CuentasPorPagarEncabezadoConcepto";
+    public static final String CuentasPorPagarEncabezadoReferencia = "CuentasPorPagarEncabezadoReferencia";
+    public static final String CuentasPorPagarEncabezadoFactura = "CuentasPorPagarEncabezadoFactura";
+    public static final String CuentasPorPagarEncabezadoDocumento = "CuentasPorPagarEncabezadoDocumento";
+    public static final String CuentasPorPagarEncabezadoImporte = "CuentasPorPagarEncabezadoImporte";
+    public static final String CuentasPorPagarEncabezadoFechaAplicacion = "CuentasPorPagarEncabezadoFechaAplicacion";
+    public static final String CuentasPorPagarEncabezadoFechaVencimiento = "CuentasPorPagarEncabezadoFechaVencimiento";
+    public static final String CuentasPorPagarEncabezadoTipoMovimiento = "CuentasPorPagarEncabezadoTipoMovimiento";
+    public static final String CuentasPorPagarEncabezadoSigno = "CuentasPorPagarEncabezadoSigno";
+    public static final String CuentasPorPagarEncabezadoFechaHora = "CuentasPorPagarEncabezadoFechaHora";
+    public static final String CuentasPorPagarEncabezadoSincronizado = "CuentasPorPagarEncabezadoSincronizado";
+    // ddl encabezado de cuentas por pagar
+    public static final String CreateTableCuentasPorPagarEncabezado = "CREATE TABLE tblcuentasporpagarencabezado (CuentasPorPagarEncabezadoProveedorClave VARCHAR(10)," +
+            "CuentasPorPagarEncabezadoConcepto INT, CuentasPorPagarEncabezadoReferencia VARCHAR(20) PRIMARY KEY, CuentasPorPagarEncabezadoFactura VARCHAR(20)," +
+            "CuentasPorPagarEncabezadoDocumento VARCHAR(20), CuentasPorPagarEncabezadoImporte DECIMAL(18,6), CuentasPorPagarEncabezadoFechaAplicacion DATETIME," +
+            "CuentasPorPagarEncabezadoFechaVencimiento DATETIME, CuentasPorPagarEncabezadoTipoMovimiento VARCHAR(1), CuentasPorPagarEncabezadoSigno INT," +
+            "CuentasPorPagarEncabezadoFechaHora DATETIME, CuentasPorPagarEncabezadoSincronizado INT)";
+    public final static String DropTableCuentasPorPagarEncabezado = "DROP TABLE IF EXISTS tblcuentasporpagarencabezado";
+
+    // campos de la tabla cuentas por pagar partidas
+    public final static String CuentasPorPagarDetalleProveedorClave = "CuentasPorPagarDetalleProveedorClave";
+    public final static String CuentasPorPagarDetalleConcepto = "CuentasPorPagarDetalleConcepto";
+    public final static String CuentasPorPagarDetalleReferencia = "CuentasPorPagarDetalleReferencia";
+    public final static String CuentasPorPagarDetalleFactura = "CuentasPorPagarDetalleFactura";
+    public final static String CuentasPorPagarDetalleDocumento = "CuentasPorPagarDetalleDocumento";
+    public final static String CuentasPorPagarDetalleImporte = "CuentasPorPagarDetalleImporte";
+    public final static String CuentasPorPagarDetalleFechaAplicacion = "CuentasPorPagarDetalleFechaAplicacion";
+    public final static String CuentasPorPagarDetalleTipoMovimiento = "CuentasPorPagarDetalleTipoMovimiento";
+    public final static String CuentasPorPagarDetalleSigno = "CuentasPorPagarDetalleSigno";
+    public final static String CuentasPorPagarDetalleFechaHora = "CuentasPorPagarDetalleFechaHora";
+    public final static String CuentasPorPagarDetalleSincronizado = "CuentasPorPagarDetalleSincronizado";
+    // ddl detalle cuentas por pagar
+    public static final String CreateTableCuentasPorPagarDetalle = "CREATE TABLE tblcuentasporpagardetalle (CuentasPorPagarDetalleProveedorClave VARCHAR(10), CuentasPorPagarDetalleConcepto INT," +
+            "CuentasPorPagarDetalleReferencia VARCHAR(20), CuentasPorPagarDetalleFactura VARCHAR(20), CuentasPorPagarDetalleDocumento VARCHAR(20), CuentasPorPagarDetalleImporte DECIMAL(18,6)," +
+            "CuentasPorPagarDetalleFechaAplicacion DATETIME, CuentasPorPagarDetalleTipoMovimiento VARCHAR(1),CuentasPorPagarDetalleSigno INT, CuentasPorPagarDetalleFechaHora DATETIME, CuentasPorPagarDetalleSincronizado INT)";
+    public final static String DropTableCuentasPorPagarDetalle = "DROP TABLE IF EXISTS tblcuentasporpagardetalle";
+
 }

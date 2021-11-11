@@ -1,5 +1,6 @@
 package com.grupoadec.acopioapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.InputType;
@@ -23,8 +26,8 @@ import com.grupoadec.acopioapp.Adaptadores.ListaAcopioPartidaTemporalAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
 import com.grupoadec.acopioapp.Models.TablaAcopioPartidaTemporal;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ActivityMainAcopio extends AppCompatActivity {
     // declaracion de variables
@@ -43,6 +46,8 @@ public class ActivityMainAcopio extends AppCompatActivity {
     String [] objectListItem;
     AlertDialog.Builder objectAlertDialogBuilderOpciones;
     AlertDialog.Builder objectAlertDialogBuilderOpcionesCantidadPrecio;
+    AlertDialog.Builder objectAlertDialogBuilderConfirmarGuardarAcopio;
+    AlertDialog.Builder objectAlertDialogBuilderConfirmarImprimirAcopio;
 
     String validarAccionTipo="";
 
@@ -52,6 +57,19 @@ public class ActivityMainAcopio extends AppCompatActivity {
     Double tpPartidaProductoCantidad;
     Double tpPartidaProductoPrecio;
 
+    String parPeProveedorClave;
+    String parPeProveedorNombre;
+    String parPeProveedorRtn;
+
+    String parPeAlmacenClave;
+    String parPeAlmacenDescripcion;
+
+    // variables para obtener fecha y hora actual
+    Calendar c;
+    SimpleDateFormat df;
+    String formattedDate;
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +91,15 @@ public class ActivityMainAcopio extends AppCompatActivity {
 
             objectAlertDialogBuilderOpciones = new AlertDialog.Builder(this);
             objectAlertDialogBuilderOpcionesCantidadPrecio = new AlertDialog.Builder(this);
+            objectAlertDialogBuilderConfirmarGuardarAcopio = new AlertDialog.Builder(this);
+            objectAlertDialogBuilderConfirmarImprimirAcopio = new AlertDialog.Builder(this);
 
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
             dispositivoId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            c = Calendar.getInstance();
+            df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            formattedDate = df.format(c.getTime());
 
             ObtenerNumeroDeRecibo();
 
@@ -90,11 +114,14 @@ public class ActivityMainAcopio extends AppCompatActivity {
             String parPeAccesoRegistroAcopio = getIntent().getStringExtra("iPeAccesoRegistroAcopio");
             String parPeAccesoRegistroProductores = getIntent().getStringExtra("iPeAccesoRegistroProductores");
 
-            String parPeProveedorClave = getIntent().getStringExtra("iptProveedorClave");
-            String parPeProveedorNombre = getIntent().getStringExtra("iptProveedorNombre");
-            String parPeProveedorRtn = getIntent().getStringExtra("iptProveedorRtn");
+            parPeProveedorClave = getIntent().getStringExtra("iptProveedorClave");
+            parPeProveedorNombre = getIntent().getStringExtra("iptProveedorNombre");
+            parPeProveedorRtn = getIntent().getStringExtra("iptProveedorRtn");
 
             String parPeValidacionNuevaFactura = getIntent().getStringExtra("iPeNuevaFactura");
+
+            parPeAlmacenClave = getIntent().getStringExtra("ipeAlmacenClave");
+            parPeAlmacenDescripcion = getIntent().getStringExtra("ipeAlmacenDescripcion");
 
             textViewProveedorAcopio.setText(parPeProveedorClave.trim() + "-" + parPeProveedorNombre);
 
@@ -236,6 +263,9 @@ public class ActivityMainAcopio extends AppCompatActivity {
                     objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
                     objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
 
+                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
+
                     startActivity(objectIntent);
                     finish();
                 }
@@ -265,6 +295,9 @@ public class ActivityMainAcopio extends AppCompatActivity {
                     // 1 = Agregar, 2 = Modificar
                     objectIntent.putExtra("iptAccionTipo", validarAccionTipo);
 
+                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
+
                     startActivity(objectIntent);
                     finish();
 
@@ -275,21 +308,91 @@ public class ActivityMainAcopio extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     try{
-                        Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
+                        if(objectArrayListTablaAcopioPartidaTemporalLista.size()>0){
+                            objectAlertDialogBuilderConfirmarGuardarAcopio.setMessage("Esta seguro que desea guardar el Recibo No. " + textViewNoReciboAcopio.getText() + " del productor, " + textViewProveedorAcopio.getText())
+                                    .setCancelable(false)
+                                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //GuardarAcopio();
 
-                        objectIntent.putExtra("iPeNombres", parPeNombres);
-                        objectIntent.putExtra("iPeApellidos", parPeApellidos);
-                        objectIntent.putExtra("iPeCorreo", parPeCorreo);
-                        objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
-                        objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
-                        objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
-                        objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
-                        objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+                                            objectAlertDialogBuilderConfirmarImprimirAcopio.setMessage("Desea imprimir el Recibo No. " + textViewNoReciboAcopio.getText() + " del productor, " + textViewProveedorAcopio.getText())
+                                                    .setCancelable(false)
+                                                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            ImprimirReciboAcopio();
 
-                        ElminarProductoAcopioPartidaTemporal();
+                                                            Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
 
-                        startActivity(objectIntent);
-                        finish();
+                                                            objectIntent.putExtra("iPeNombres", parPeNombres);
+                                                            objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                                                            objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                                                            objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                                                            objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                                                            objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                                                            objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                                                            objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                                                            objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                                                            objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
+
+                                                            ElminarProductoAcopioPartidaTemporal();
+
+                                                            startActivity(objectIntent);
+                                                            finish();
+                                                        }
+                                                    })
+                                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            //  Action for 'NO' Button
+                                                            //dialog.cancel();
+                                                            Toast.makeText(getApplicationContext(),"No se imprimio el Recibo No. " + textViewNoReciboAcopio.getText(),
+                                                                    Toast.LENGTH_SHORT).show();
+
+                                                            Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
+
+                                                            objectIntent.putExtra("iPeNombres", parPeNombres);
+                                                            objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                                                            objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                                                            objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                                                            objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                                                            objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                                                            objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                                                            objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                                                            objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                                                            objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
+
+                                                            ElminarProductoAcopioPartidaTemporal();
+
+                                                            startActivity(objectIntent);
+                                                            finish();
+                                                        }
+                                                    });
+                                            //Creating dialog box
+                                            AlertDialog alertConfirmarImprimirRecibo = objectAlertDialogBuilderConfirmarImprimirAcopio.create();
+                                            //Setting the title manually
+                                            alertConfirmarImprimirRecibo.setTitle("Alerta");
+                                            alertConfirmarImprimirRecibo.show();
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //  Action for 'NO' Button
+                                            dialog.cancel();
+                                            Toast.makeText(getApplicationContext(),"No se guardo el Recibo No. " + textViewNoReciboAcopio.getText(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            //Creating dialog box
+                            AlertDialog alertConfirmarGuardarRecibo = objectAlertDialogBuilderConfirmarGuardarAcopio.create();
+                            //Setting the title manually
+                            alertConfirmarGuardarRecibo.setTitle("Alerta");
+                            alertConfirmarGuardarRecibo.show();
+
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Debe agregar al menos 1 producto",Toast.LENGTH_SHORT).show();
+                        }
+
                     }catch (Exception e){
                         Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
@@ -423,6 +526,54 @@ public class ActivityMainAcopio extends AppCompatActivity {
         subTotal = 0.00;
         impuesto = 0.00;
         total = 0.00;
+    }
+
+    private void GuardarAcopio() {
+
+        try{
+            SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+
+            Integer AcopioPartidaNo = 1;
+
+            String consultaSql = "SELECT * FROM tblacopiopartidatmp";
+            Cursor cursor = db.rawQuery(consultaSql, null);
+
+            if(cursor.moveToNext()){
+                AcopioPartidaNo = 2;
+                while (cursor.moveToNext()){
+                    AcopioPartidaNo++;
+                }
+            }
+
+            ContentValues valores = new ContentValues();
+            valores.put(Transacciones.CompraEncabezadoDocumento, textViewNoReciboAcopio.getText().toString());
+            valores.put(Transacciones.CompraEncabezadoTipoDocumento, "c");
+            valores.put(Transacciones.CompraEncabezadoProveedorClave, parPeProveedorClave);
+            valores.put(Transacciones.CompraEncabezadoEstado, "O");
+            valores.put(Transacciones.CompraEncabezadoFecha, formattedDate);
+            valores.put(Transacciones.CompraEncabezadoSubTotal, subTotal);
+            valores.put(Transacciones.CompraEncabezadoImpuesto, impuesto);
+            valores.put(Transacciones.CompraEncabezadoTotal, subTotal);
+            valores.put(Transacciones.CompraEncabezadoSubTotal, total);
+            valores.put(Transacciones.CompraEncabezadoAlmacen, 0);
+            valores.put(Transacciones.CompraEncabezadoFechaHora, formattedDate);
+            valores.put(Transacciones.CompraEncabezadoSincronizado, 0);
+
+            Long resultado = db.insert(Transacciones.tablacomprasencabezado, null, valores);
+
+            if(resultado != -1){
+                db.close();
+            }else{
+                Toast.makeText(getApplicationContext(),"No se guardo el encabezado de compras ",Toast.LENGTH_SHORT).show();
+            }
+
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void ImprimirReciboAcopio() {
     }
 
 }

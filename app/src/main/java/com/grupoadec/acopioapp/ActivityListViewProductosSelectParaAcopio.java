@@ -34,6 +34,9 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
     ImageView btnvolveractivitymain;
     ListaProductosAdapter objectAdapter;
 
+    String parPeAlmacenClave;
+    String parPeAlmacenDescripcion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,9 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
             String parPeProveedorClave = getIntent().getStringExtra("iptProveedorClave");
             String parPeProveedorNombre = getIntent().getStringExtra("iptProveedorNombre");
             String parPeProveedorRtn = getIntent().getStringExtra("iptProveedorRtn");
+
+            parPeAlmacenClave = getIntent().getStringExtra("ipeAlmacenClave");
+            parPeAlmacenDescripcion = getIntent().getStringExtra("ipeAlmacenDescripcion");
 
             ObtenerListaProductos();
 
@@ -100,6 +106,9 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
                     objectIntent.putExtra("iptProveedorNombre", parPeProveedorNombre);
                     objectIntent.putExtra("iptProveedorRtn", parPeProveedorRtn);
 
+                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
+
                     objectIntent.putExtra("iPeNuevaFactura", "0");
 
                     startActivity(objectIntent);
@@ -128,6 +137,9 @@ public class ActivityListViewProductosSelectParaAcopio extends AppCompatActivity
                     objectIntent.putExtra("iptProveedorClave", parPeProveedorClave);
                     objectIntent.putExtra("iptProveedorNombre", parPeProveedorNombre);
                     objectIntent.putExtra("iptProveedorRtn", parPeProveedorRtn);
+
+                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
 
                     startActivity(objectIntent);
                     finish();

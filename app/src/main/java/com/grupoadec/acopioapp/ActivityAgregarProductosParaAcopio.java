@@ -16,9 +16,11 @@ import android.widget.Toast;
 
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
+import com.grupoadec.acopioapp.Models.TablaAlmacenes;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 
 public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
     Button btnagregarproducto;
@@ -28,6 +30,12 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
     SQLiteConexion conexion;
     String parPeProductoClave,parPeProductoNombre,parPeProductoCosto;
     Double calculoSubTotalPartida;
+
+    ArrayList<String> objectArrayListStringAlmacenes;
+    ArrayList<TablaAlmacenes> objectArrayListAlmacenesLista;
+
+    String parPeAlmacenClave;
+    String parPeAlmacenDescripcion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +69,14 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
             parPeProductoNombre = getIntent().getStringExtra("iptProductoNombre");
             parPeProductoCosto = getIntent().getStringExtra("iptProductoCosto");
 
+            parPeAlmacenClave = getIntent().getStringExtra("ipeAlmacenClave");
+            parPeAlmacenDescripcion = getIntent().getStringExtra("ipeAlmacenDescripcion");
+
             nombreproductoparaacopio_input.setText(parPeProductoNombre);
             precioconfiguracion_input.setText(parPeProductoCosto);
+
+            // Llenamos el Spinner Almacenes
+            ObtenerListaAlmacenes();
 
             btnvolveractivityproductos.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,6 +97,9 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
                     objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
 
                     objectIntent.putExtra("iPeNuevaFactura", "0");
+
+                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
 
                     startActivity(objectIntent);
                     finish();
@@ -119,6 +136,9 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
                             objectIntent.putExtra("iptSubTotalPartida", calculoSubTotalPartida.toString());
 
                             objectIntent.putExtra("iPeNuevaFactura", "0");
+
+                            objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                            objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
 
                             AgregarProducto();
 
@@ -176,4 +196,34 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
         }
 
     }
+
+    private void ObtenerListaAlmacenes() {
+        SQLiteDatabase objectSqLiteDatabase = conexion.getReadableDatabase();
+        TablaAlmacenes objectTablaAlmacenesLista = null;
+        objectArrayListAlmacenesLista = new ArrayList<TablaAlmacenes>();
+
+        Cursor objectCursor = objectSqLiteDatabase.rawQuery("SELECT * FROM " + Transacciones.tablaalmacenes, null);
+
+        while (objectCursor.moveToNext()){
+            objectTablaAlmacenesLista = new TablaAlmacenes();
+            objectTablaAlmacenesLista.setAlmacenClave(objectCursor.getInt(0));
+            objectTablaAlmacenesLista.setAlmacenDescripcion(objectCursor.getString(1));
+
+            objectArrayListAlmacenesLista.add(objectTablaAlmacenesLista);
+        }
+
+        objectCursor.close();
+
+        LlenarspinnerSelectAlmacen();
+    }
+
+    private void LlenarspinnerSelectAlmacen() {
+        objectArrayListStringAlmacenes = new ArrayList<String>();
+        for(int i = 0; i < objectArrayListAlmacenesLista.size(); i++){
+            objectArrayListStringAlmacenes.add(objectArrayListAlmacenesLista.get(i).getAlmacenClave().toString() + " | " +
+                    objectArrayListAlmacenesLista.get(i).getAlmacenDescripcion());
+        }
+    }
+
+
 }

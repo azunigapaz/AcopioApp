@@ -5,6 +5,7 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,11 +38,11 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         db.execSQL(Transacciones.CreateTableConfiguraciones);
         db.execSQL(Transacciones.CreateTableAcopioPartidaTmp);
         // create compras
-        db.execSQL(Transacciones.tablacomprasencabezado);
-        db.execSQL(Transacciones.tablacompraspartida);
-        db.execSQL(Transacciones.tablacuentasporpagarconceptos);
-        db.execSQL(Transacciones.tablacuentasporpagarencabezado);
-        db.execSQL(Transacciones.tablacuentasporpagardetalle);
+        db.execSQL(Transacciones.CreateTableComprasEncabezado);
+        db.execSQL(Transacciones.CreateTableComprasPartida);
+        db.execSQL(Transacciones.CreateTableCuentasPorPagarConceptos);
+        db.execSQL(Transacciones.CreateTableCuentasPorPagarEncabezado);
+        db.execSQL(Transacciones.CreateTableCuentasPorPagarDetalle);
     }
 
     @Override

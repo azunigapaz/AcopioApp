@@ -50,6 +50,9 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
             String parPeApellidos = getIntent().getStringExtra("peApellidos");
             String parPeCorreo = getIntent().getStringExtra("peCorreo");
 
+            String parPeAlmacenClave = getIntent().getStringExtra("ipeAlmacenClave");
+            String parPeAlmacenDescripcion = getIntent().getStringExtra("ipeAlmacenDescripcion");
+
             String parPeAccesoBajarDatos = getIntent().getStringExtra("iPeAccesoBajarDatos");
             String parPeAccesoSubirDatos = getIntent().getStringExtra("iPeAccesoSubirDatos");
             String parPeAccesoConfiguracion = getIntent().getStringExtra("iPeAccesoConfiguracion");
@@ -118,6 +121,9 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
                     objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
 
                     objectIntent.putExtra("iPeNuevaFactura", "1");
+
+                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
 
                     startActivity(objectIntent);
                     finish();

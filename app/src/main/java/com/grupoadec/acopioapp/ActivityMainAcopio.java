@@ -65,9 +65,13 @@ public class ActivityMainAcopio extends AppCompatActivity {
     String parPeAlmacenDescripcion;
 
     // variables para obtener fecha y hora actual
-    Calendar c;
-    SimpleDateFormat df;
-    String formattedDate;
+    Calendar objectCalendar;
+    SimpleDateFormat objectSimpleDateFormatFechaDocumento;
+    String fechaDocumento;
+    SimpleDateFormat objectSimpleDateFormatFechaHoraDocumento;
+    String fechaHoraDocumento;
+
+    String sufijoDocumento = "",nuevoDocumento = "", reciboNo = "";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -97,9 +101,12 @@ public class ActivityMainAcopio extends AppCompatActivity {
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
             dispositivoId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-            c = Calendar.getInstance();
-            df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            formattedDate = df.format(c.getTime());
+            objectCalendar = Calendar.getInstance();
+            objectSimpleDateFormatFechaDocumento = new SimpleDateFormat("yyyy-MM-dd");
+            fechaDocumento = objectSimpleDateFormatFechaDocumento.format(objectCalendar.getTime());
+
+            objectSimpleDateFormatFechaHoraDocumento = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            fechaHoraDocumento = objectSimpleDateFormatFechaHoraDocumento.format(objectCalendar.getTime());
 
             ObtenerNumeroDeRecibo();
 
@@ -313,7 +320,7 @@ public class ActivityMainAcopio extends AppCompatActivity {
                                     .setCancelable(false)
                                     .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            //GuardarAcopio();
+                                            GuardarAcopio();
 
                                             objectAlertDialogBuilderConfirmarImprimirAcopio.setMessage("Desea imprimir el Recibo No. " + textViewNoReciboAcopio.getText() + " del productor, " + textViewProveedorAcopio.getText())
                                                     .setCancelable(false)
@@ -409,8 +416,6 @@ public class ActivityMainAcopio extends AppCompatActivity {
             String ConsultaSql = "SELECT * FROM " + Transacciones.tablaconfiguraciones + " WHERE ConfiguracionId = '" + dispositivoId + "'";
 
             Cursor objectCursor = objectSqLiteDatabase.rawQuery(ConsultaSql,null);
-
-            String sufijoDocumento = "",nuevoDocumento = "", reciboNo = "";
 
             if (objectCursor.getCount()!=0){
                 while (objectCursor.moveToNext()){
@@ -531,49 +536,88 @@ public class ActivityMainAcopio extends AppCompatActivity {
     private void GuardarAcopio() {
 
         try{
-            SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+            SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
 
-            Integer AcopioPartidaNo = 1;
+            objectSqLiteDatabase.beginTransaction();
 
-            String consultaSql = "SELECT * FROM tblacopiopartidatmp";
-            Cursor cursor = db.rawQuery(consultaSql, null);
+            try{
+                // encabezado de compras
+                ContentValues objectContentValuesCompraEncabezado = new ContentValues();
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoDocumento, textViewNoReciboAcopio.getText().toString());
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoTipoDocumento, "c");
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoProveedorClave, parPeProveedorClave);
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoEstado, "O");
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoFecha, fechaDocumento);
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoSubTotal, subTotal);
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoImpuesto, impuesto);
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoTotal, subTotal);
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoSubTotal, total);
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoAlmacen, Integer.parseInt(parPeAlmacenClave));
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoFechaHora, fechaHoraDocumento);
+                objectContentValuesCompraEncabezado.put(Transacciones.CompraEncabezadoSincronizado, 0);
 
-            if(cursor.moveToNext()){
-                AcopioPartidaNo = 2;
-                while (cursor.moveToNext()){
-                    AcopioPartidaNo++;
+                Long resultadoInsertComprasEncabezado = objectSqLiteDatabase.insert(Transacciones.tablacomprasencabezado, null, objectContentValuesCompraEncabezado);
+
+                // detalle de compras
+                Long resultadoInsertComprasDetalle = 12345678910L;
+                Integer partidaContador = 0;
+                for(int i = 0; i < objectArrayListTablaAcopioPartidaTemporalLista.size(); i++){
+                    partidaContador = partidaContador + 1;
+                    ContentValues objectContentValuesCompraDetalle = new ContentValues();
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaTipoDocumento, "c");
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaDocumento, textViewNoReciboAcopio.getText().toString());
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaNumeroFila, partidaContador);
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaProductoClave, objectArrayListTablaAcopioPartidaTemporalLista.get(i).getAcopioPartidaProductoClave());
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaCantidad, Double.parseDouble(objectArrayListTablaAcopioPartidaTemporalLista.get(i).getAcopioPartidaProductoCantidad().toString()));
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaCosto, Double.parseDouble(objectArrayListTablaAcopioPartidaTemporalLista.get(i).getAcopioPartidaProductoPrecio().toString()));
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaImpuesto, 0.00);
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaTotal, Double.parseDouble(objectArrayListTablaAcopioPartidaTemporalLista.get(i).getAcopioPartidaProductoSubTotal().toString()));
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaAlmacen, Integer.parseInt(parPeAlmacenClave));
+                    objectContentValuesCompraDetalle.put(Transacciones.CompraPartidaSincronizado, 0);
+
+                    resultadoInsertComprasDetalle = objectSqLiteDatabase.insert(Transacciones.tablacompraspartida, null, objectContentValuesCompraDetalle);
                 }
-            }
+                // cuentas por pagar encabezado
 
-            ContentValues valores = new ContentValues();
-            valores.put(Transacciones.CompraEncabezadoDocumento, textViewNoReciboAcopio.getText().toString());
-            valores.put(Transacciones.CompraEncabezadoTipoDocumento, "c");
-            valores.put(Transacciones.CompraEncabezadoProveedorClave, parPeProveedorClave);
-            valores.put(Transacciones.CompraEncabezadoEstado, "O");
-            valores.put(Transacciones.CompraEncabezadoFecha, formattedDate);
-            valores.put(Transacciones.CompraEncabezadoSubTotal, subTotal);
-            valores.put(Transacciones.CompraEncabezadoImpuesto, impuesto);
-            valores.put(Transacciones.CompraEncabezadoTotal, subTotal);
-            valores.put(Transacciones.CompraEncabezadoSubTotal, total);
-            valores.put(Transacciones.CompraEncabezadoAlmacen, 0);
-            valores.put(Transacciones.CompraEncabezadoFechaHora, formattedDate);
-            valores.put(Transacciones.CompraEncabezadoSincronizado, 0);
+                ContentValues objectContentValuesCxpEncabezado = new ContentValues();
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoProveedorClave, parPeProveedorClave);
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoConcepto, 1);
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoReferencia, textViewNoReciboAcopio.getText().toString());
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoFactura, textViewNoReciboAcopio.getText().toString());
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoDocumento, textViewNoReciboAcopio.getText().toString());
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoImporte, total);
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoFechaAplicacion, fechaDocumento);
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoFechaVencimiento, fechaDocumento);
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoTipoMovimiento, "C");
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoSigno, 1);
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoFechaHora, fechaHoraDocumento);
+                objectContentValuesCxpEncabezado.put(Transacciones.CuentasPorPagarEncabezadoSincronizado, 0);
 
-            Long resultado = db.insert(Transacciones.tablacomprasencabezado, null, valores);
+                Long resultadoInsertCxpEncabezado = objectSqLiteDatabase.insert(Transacciones.tablacuentasporpagarencabezado, null, objectContentValuesCxpEncabezado);
 
-            if(resultado != -1){
-                db.close();
-            }else{
-                Toast.makeText(getApplicationContext(),"No se guardo el encabezado de compras ",Toast.LENGTH_SHORT).show();
+                // Actualizamos el ultimo numero de documento
+                String [] params = { dispositivoId };
+
+                ContentValues objectContentValuesUpdateConfiguracion = new ContentValues();
+                objectContentValuesUpdateConfiguracion.put(Transacciones.ConfiguracionUltimoDocumento, Integer.parseInt(nuevoDocumento));
+
+                objectSqLiteDatabase.update(Transacciones.tablaconfiguraciones, objectContentValuesUpdateConfiguracion, Transacciones.ConfiguracionId + "=?", params);
+
+                // hacemos commit
+                objectSqLiteDatabase.setTransactionSuccessful();
+
+            } finally {
+                objectSqLiteDatabase.endTransaction();
+                Toast.makeText(getApplicationContext(),"Documento: " + reciboNo + ", guardado",Toast.LENGTH_SHORT).show();
             }
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void ImprimirReciboAcopio() {
+
     }
 
 }

@@ -40,16 +40,18 @@
             android:layout_height="40dp"
             android:layout_marginLeft="360dp"
             android:layout_marginTop="22dp"
-            android:src="@drawable/aniadir_icono" />
+            android:src="@drawable/aniadir_icono"
+            android:visibility="gone" />
 
         <!-- BUSCAR -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="-43dp"
-            android:layout_marginRight="60dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/cacao_border_rounded_cornwe_black">
+            <!-- NOTA: Cuando quites el gone poner el marginTop => android:layout_marginTop="-43dp" y el marginRight ponerlo a 60 -->
 
             <!-- INPUT -->
             <EditText

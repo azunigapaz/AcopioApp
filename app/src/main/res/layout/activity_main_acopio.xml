@@ -13,7 +13,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:background="@drawable/cacaoactivity_bg">
 
             <ImageView
@@ -28,7 +28,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="30dp"
+                android:padding="10dp"
                 android:src="@drawable/acopiotexto"/>
 
         </FrameLayout>
@@ -107,27 +107,28 @@
 
             <ImageView
                 android:id="@+id/btnactivityproductosparaacopio"
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="10dp"
+                android:paddingRight="-20dp"
                 android:src="@drawable/buscaracopio_icono" />
 
             <ImageView
                 android:id="@+id/btnguardaracopio"
-                android:layout_width="45dp"
+                android:layout_width="100dp"
                 android:layout_height="45dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:paddingLeft="-40dp"
                 android:layout_toRightOf="@+id/btnactivityproductosparaacopio"
                 android:src="@drawable/agregaracopio_icono" />
-
         </RelativeLayout>
 
         <ListView
             android:id="@+id/acopio_listview"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="250dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:scrollbarAlwaysDrawVerticalTrack="true"
@@ -153,8 +154,6 @@
                 android:inputType="none"
                 android:maxLines="1"
                 android:paddingLeft="15dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
@@ -167,8 +166,6 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_medium"
                 android:maxLines="1"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:text="SUB TOTAL:"
                 android:textColor="@color/black"
                 android:textSize="15dp" />
@@ -194,8 +191,6 @@
                 android:inputType="none"
                 android:maxLines="1"
                 android:paddingLeft="15dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
@@ -208,8 +203,6 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_medium"
                 android:maxLines="1"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:text="IMPUESTOS:"
                 android:textColor="@color/black"
                 android:textSize="15dp" />
@@ -235,8 +228,6 @@
                 android:inputType="none"
                 android:maxLines="1"
                 android:paddingLeft="15dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
@@ -249,8 +240,6 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_medium"
                 android:maxLines="1"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:text="TOTAL:"
                 android:textColor="@color/black"
                 android:textSize="15dp" />

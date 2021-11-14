@@ -21,10 +21,16 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
@@ -55,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
-    String HttpURI = "http://192.168.0.146/ApiSaeAppAcopio/assets/php/apicrud.php";
+    String dispositivoId,httpUriCfg,apiBajarDatos,apiSubirDatos,apiSubirCompras;
+    String HttpURI = "http://192.168.68.105/ApiSaeAppAcopio/assets/php/apicrud.php";
+    String HttpURI2 = "http://192.168.68.105/ApiSaeAppAcopio/assets/php/insertarcomprasapi.php";
+    Boolean validarConfiguracion = false;
 
     SQLiteConexion objectSqLiteConexion;
 
@@ -85,8 +94,15 @@ public class MainActivity extends AppCompatActivity {
             String uniqueID = UUID.randomUUID().toString();
             Log.d("Codigo Aleatorio: ",uniqueID);
 
-            String id = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
-            Log.d("Codigo Unico: ",id);
+            dispositivoId = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+            Log.d("Codigo Unico: ",dispositivoId);
+
+            // obtener la url
+            ObtenerUriConfiguracion();
+            // establecemos la uri para cada proceso
+            apiBajarDatos = httpUriCfg+"apicrud.php";
+            apiSubirDatos = httpUriCfg+"apicrud.php";
+            apiSubirCompras = httpUriCfg+"insertarcomprasapi.php";
 
             // inicializamos requestQueue
             requestQueue = Volley.newRequestQueue(this);
@@ -156,78 +172,83 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    Spinner selector = new Spinner(MainActivity.this);
-                    selector.setLayoutParams(new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
-                    selector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(final AdapterView<?> adapterView, View view, final int i, long l) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    AlmacenClave = objectArrayListAlmacenesLista.get(i).getAlmacenClave().toString();
-                                    AlmacenDescripcion = objectArrayListAlmacenesLista.get(i).getAlmacenDescripcion();
-                                    //adapterView.getItemAtPosition(i).toString()
-                                    //Toast.makeText(MainActivity.this, AlmacenClave + " " + AlmacenDescripcion,Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                    if(validarConfiguracion = true){
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
-
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(MainActivity.this,
-                            android.R.layout.simple_spinner_item,
-                            objectArrayListStringAlmacenes);
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    selector.setAdapter(dataAdapter);
-                    dataAdapter.notifyDataSetChanged();
-
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                    dialogBuilder.setView(selector);
-                    dialogBuilder.setTitle("Selecciones un Almacen");
-                    dialogBuilder.setCancelable(false)
-                            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    if(selector.getSelectedItem().toString().length()>0){
-                                        // Si el usuario confirma
-                                        Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
-
-                                        objectIntent.putExtra("iPeNombres", parPeNombres);
-                                        objectIntent.putExtra("iPeApellidos", parPeApellidos);
-                                        objectIntent.putExtra("iPeCorreo", parPeCorreo);
-                                        objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
-                                        objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
-                                        objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
-                                        objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
-                                        objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
-
-                                        objectIntent.putExtra("ipeAlmacenClave", AlmacenClave);
-                                        objectIntent.putExtra("ipeAlmacenDescripcion", AlmacenDescripcion);
-
-                                        //Toast.makeText(MainActivity.this,"Ha seleccionado el almacen: " + AlmacenClave + " " + AlmacenDescripcion, Toast.LENGTH_SHORT).show();
-
-                                        startActivity(objectIntent);
-                                        finish();
-                                    }else{
-                                        Toast.makeText(MainActivity.this,"Debe seleccionar un almacen", Toast.LENGTH_SHORT).show();
+                        Spinner selector = new Spinner(MainActivity.this);
+                        selector.setLayoutParams(new LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT));
+                        selector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(final AdapterView<?> adapterView, View view, final int i, long l) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AlmacenClave = objectArrayListAlmacenesLista.get(i).getAlmacenClave().toString();
+                                        AlmacenDescripcion = objectArrayListAlmacenesLista.get(i).getAlmacenDescripcion();
                                     }
-                                }
-                            })
-                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    //  Action for 'NO' Button
-                                    dialog.cancel();
+                                });
+                            }
 
-                                }
-                            });
-                    //dialogBuilder.setMessage("message");
-                    AlertDialog b = dialogBuilder.create();
-                    b.show();
+                            @Override
+                            public void onNothingSelected(AdapterView<?> adapterView) {
+
+                            }
+                        });
+
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(MainActivity.this,
+                                android.R.layout.simple_spinner_item,
+                                objectArrayListStringAlmacenes);
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        selector.setAdapter(dataAdapter);
+                        dataAdapter.notifyDataSetChanged();
+
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                        dialogBuilder.setView(selector);
+                        dialogBuilder.setTitle("Selecciones un Almacen");
+                        dialogBuilder.setCancelable(false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if(selector.getSelectedItem().toString().length()>0){
+                                            // Si el usuario confirma
+                                            Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
+
+                                            objectIntent.putExtra("iPeNombres", parPeNombres);
+                                            objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                                            objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                                            objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                                            objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                                            objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                                            objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                                            objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                                            objectIntent.putExtra("ipeAlmacenClave", AlmacenClave);
+                                            objectIntent.putExtra("ipeAlmacenDescripcion", AlmacenDescripcion);
+
+                                            //Toast.makeText(MainActivity.this,"Ha seleccionado el almacen: " + AlmacenClave + " " + AlmacenDescripcion, Toast.LENGTH_SHORT).show();
+
+                                            startActivity(objectIntent);
+                                            finish();
+                                        }else{
+                                            Toast.makeText(MainActivity.this,"Debe seleccionar un almacen", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //  Action for 'NO' Button
+                                        dialog.cancel();
+
+                                    }
+                                });
+                        //dialogBuilder.setMessage("message");
+                        AlertDialog b = dialogBuilder.create();
+                        b.show();
+
+                    }else{
+                        Toast.makeText(MainActivity.this,"Debe realizar la configuración del sistema", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
 
@@ -273,6 +294,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void ObtenerUriConfiguracion() {
+        try{
+            SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
+            String ConsultaSql = "SELECT * FROM " + Transacciones.tablaconfiguraciones + " WHERE ConfiguracionId = '" + dispositivoId + "'";
+
+            Cursor objectCursor = objectSqLiteDatabase.rawQuery(ConsultaSql,null);
+
+            if (objectCursor.getCount()!=0){
+                while (objectCursor.moveToNext()){
+                    httpUriCfg  = objectCursor.getString(3).toString();
+                }
+                validarConfiguracion = true;
+            }else{
+                Toast.makeText(getApplicationContext(),"No existe configuración",Toast.LENGTH_SHORT).show();
+            }
+            objectCursor.close();
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     private void SubirDatos() {
         try{
 
@@ -305,22 +348,24 @@ public class MainActivity extends AppCompatActivity {
 
 
                     // creamos la cadena que se enviara al webservice
-                    StringRequest stringRequestSubirUsuarios = new StringRequest(Request.Method.POST, HttpURI,
+                    StringRequest stringRequestSubirUsuarios = new StringRequest(Request.Method.POST, apiSubirDatos,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String serverResponse) {
                                     // Recibimos la respuesta del web services
-
                                     try{
-
                                         JSONObject jsonObject = new JSONObject(serverResponse);
 
                                         // obtenemos las variables declaradas en el webservice
                                         String mensajeApi = jsonObject.getString("mensajeactintusuario");
                                         Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
+                                        // ocultamos el progress Dialog
+                                        progressDialog.dismiss();
+
                                     }catch (JSONException ex){
                                         ex.printStackTrace();
+                                        progressDialog.dismiss();
                                     }
 
                                 }
@@ -365,8 +410,7 @@ public class MainActivity extends AppCompatActivity {
                 objectCursorUsuarios.close();
                 // cerramos la conexion
                 objectSqLiteDatabase.close();
-                // ocultamos el progress Dialog
-                progressDialog.dismiss();
+
             }else{
                 Toast.makeText(this, "No existen registros de usuarios en la base de datos", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
@@ -390,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
                     final String configuracionTipoImpresora = objectCursorConfiguraciones.getString(4);
 
                     // creamos la cadena que se enviara al webservice
-                    StringRequest stringRequestSubirConfiguraciones = new StringRequest(Request.Method.POST, HttpURI,
+                    StringRequest stringRequestSubirConfiguraciones = new StringRequest(Request.Method.POST, apiSubirDatos,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String serverResponse) {
@@ -401,9 +445,9 @@ public class MainActivity extends AppCompatActivity {
                                         // obtenemos las variables declaradas en el webservice
                                         String mensajeApi = jsonObject.getString("mensajeactintconfiguraciones");
                                         Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
-
                                     }catch (JSONException ex){
                                         ex.printStackTrace();
+                                        Toast.makeText(getApplicationContext(),ex.getMessage(),Toast.LENGTH_SHORT).show();
                                     }
 
                                 }
@@ -442,11 +486,130 @@ public class MainActivity extends AppCompatActivity {
                 objectSqLiteDatabase.close();
                 // ocultamos el progress Dialog
                 progressDialog.dismiss();
+
             }else{
                 Toast.makeText(this, "No existen registros de configuración en la base de datos", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
+
+            progressDialog.setMessage("Procesando compras...");
+            progressDialog.show();
+
+            // subir JSONObject de compras
+            RequestQueue queue = Volley.newRequestQueue(this);
+            // creo los objetos Json
+            JSONObject jsonObjectEncabezadoCompras;
+            JSONObject jsonObjectDocumentoCompras = new JSONObject();
+            JSONArray jsonArrayTransaccionCompras = new JSONArray();
+
+            objectSqLiteDatabase = objectSqLiteConexion.getReadableDatabase();
+            Cursor objectCursorEncabezadoCompras = objectSqLiteDatabase.rawQuery("SELECT * FROM tblcomprasencabezado WHERE CompraEncabezadoSincronizado = 0" , null);
+
+            if(objectCursorEncabezadoCompras.getCount()!=0){
+                int i = 0;
+                while (objectCursorEncabezadoCompras.moveToNext()){
+                    String documentoCompra = objectCursorEncabezadoCompras.getString(0).toString();
+                    jsonObjectEncabezadoCompras = new JSONObject();
+                    try {
+                        jsonObjectEncabezadoCompras.put("Documento",objectCursorEncabezadoCompras.getString(0));
+                        jsonObjectEncabezadoCompras.put("TipoDocumento",objectCursorEncabezadoCompras.getString(1));
+                        jsonObjectEncabezadoCompras.put("Proveedor",objectCursorEncabezadoCompras.getString(2));
+                        jsonObjectEncabezadoCompras.put("Estado",objectCursorEncabezadoCompras.getString(3));
+                        jsonObjectEncabezadoCompras.put("Fecha",objectCursorEncabezadoCompras.getString(4));
+                        jsonObjectEncabezadoCompras.put("SubTotal",objectCursorEncabezadoCompras.getDouble(5));
+                        jsonObjectEncabezadoCompras.put("Impuesto",objectCursorEncabezadoCompras.getDouble(6));
+                        jsonObjectEncabezadoCompras.put("Total",objectCursorEncabezadoCompras.getDouble(7));
+                        jsonObjectEncabezadoCompras.put("Almacen",objectCursorEncabezadoCompras.getInt(8));
+                        jsonObjectEncabezadoCompras.put("FechaHora",objectCursorEncabezadoCompras.getString(9));
+
+                        // creamos la partida
+                        JSONArray jsonArrayPartidaCompras = new JSONArray();
+
+                        Cursor objectCursorPartidaCompras = objectSqLiteDatabase.rawQuery("SELECT * FROM tblcompraspartida WHERE CompraPartidaDocumento = '" + documentoCompra + "' AND CompraPartidaSincronizado = 0", null);
+                        if(objectCursorPartidaCompras.getCount()!=0){
+                            int j = 0;
+                            while (objectCursorPartidaCompras.moveToNext()){
+                                JSONObject jsonObjectPartidaCompras = new JSONObject();
+                                try{
+                                    jsonObjectPartidaCompras.put("TipoDocumento",objectCursorPartidaCompras.getString(0));
+                                    jsonObjectPartidaCompras.put("Documento",objectCursorPartidaCompras.getString(1));
+                                    jsonObjectPartidaCompras.put("FilaNumero",objectCursorPartidaCompras.getInt(2));
+                                    jsonObjectPartidaCompras.put("Producto",objectCursorPartidaCompras.getString(3));
+                                    jsonObjectPartidaCompras.put("Cantidad",objectCursorPartidaCompras.getDouble(4));
+                                    jsonObjectPartidaCompras.put("Precio",objectCursorPartidaCompras.getDouble(5));
+                                    jsonObjectPartidaCompras.put("Impuesto",objectCursorPartidaCompras.getDouble(6));
+                                    jsonObjectPartidaCompras.put("TotalPartida",objectCursorPartidaCompras.getDouble(7));
+                                    jsonObjectPartidaCompras.put("Almacen",objectCursorPartidaCompras.getInt(8));
+
+                                    jsonArrayPartidaCompras.put(j, jsonObjectPartidaCompras);
+                                    j++;
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+                                    progressDialog.dismiss();
+                                }
+                            }
+                        }
+
+                        jsonObjectEncabezadoCompras.put("DetalleCompra",jsonArrayPartidaCompras);
+                        objectCursorPartidaCompras.close();
+
+                        // Llenamos el Array con los documentos de compras
+                        jsonArrayTransaccionCompras.put(i,jsonObjectEncabezadoCompras);
+                        i++;
+
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                        progressDialog.dismiss();
+                    }
+                }
+            }
+
+            // cerramos el cursor
+            objectCursorEncabezadoCompras.close();
+            // cerramos la conexion
+            objectSqLiteConexion.close();
+
+            // creamos el tag mas la informacion del encabezado
+            try{
+                // llenamos el objeto json para enviar la peticion
+                jsonObjectDocumentoCompras.put("Compra",jsonArrayTransaccionCompras);
+            }catch (JSONException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+            }
+
+            JsonObjectRequest jsonObjectRequestCompras = new JsonObjectRequest
+                    (Request.Method.POST, apiSubirCompras, jsonObjectDocumentoCompras, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+                                JSONArray jsonArray = response.getJSONArray("mensaje");
+
+                                String respuesta = "";
+                                for(int i = 0; i < jsonArray.length(); i++){
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                    respuesta = jsonObject.getString("respuestacompras");
+                                }
+
+                                Toast.makeText(getApplicationContext(),respuesta,Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                        }
+                    });
+
+            requestQueue.add(jsonObjectRequestCompras);
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
@@ -456,16 +619,16 @@ public class MainActivity extends AppCompatActivity {
     private void BajarDatos() {
         try{
             // bajar datos de usuarios
-            // creamos la cadena que se enviara al webservice
-            StringRequest stringRequestBajarUsuarios = new StringRequest(Request.Method.POST, HttpURI,
+
+            // Mostramos el progressDialog
+            progressDialog.setMessage("Procesando usuarios...");
+            progressDialog.show();
+            StringRequest stringRequestBajarUsuarios = new StringRequest(Request.Method.POST, apiBajarDatos,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String serverResponse) {
                             // recibimos la respuesta del web services
                             try{
-                                // Mostramos el progressDialog
-                                progressDialog.setMessage("Procesando...");
-                                progressDialog.show();
 
                                 JSONObject jsonObject = new JSONObject(serverResponse);
                                 JSONArray objectJsonArrayTablaUsuarios = jsonObject.getJSONArray("tablausuarios");
@@ -554,7 +717,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
                                 Toast.makeText(getApplicationContext(), "Usuarios actualizados", Toast.LENGTH_SHORT).show();
-
+                                progressDialog.dismiss();
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
@@ -585,8 +748,12 @@ public class MainActivity extends AppCompatActivity {
             requestQueue.add(stringRequestBajarUsuarios);
 
             // Bajar datos de proveedores
-            // creamos la cadena que se enviara al webservice
-            StringRequest stringRequestBajarProveedores = new StringRequest(Request.Method.POST, HttpURI,
+
+            // Mostramos el progressDialog
+            progressDialog.setMessage("Procesando proveedores...");
+            progressDialog.show();
+
+            StringRequest stringRequestBajarProveedores = new StringRequest(Request.Method.POST, apiBajarDatos,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String serverResponse) {
@@ -669,7 +836,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
                                 Toast.makeText(getApplicationContext(), "Productores actualizados", Toast.LENGTH_SHORT).show();
-
+                                progressDialog.dismiss();
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
@@ -701,8 +868,12 @@ public class MainActivity extends AppCompatActivity {
 
 
             // Bajar datos de productos
-            // creamos la cadena que se enviara al webservice
-            StringRequest stringRequestBajarProductos = new StringRequest(Request.Method.POST, HttpURI,
+
+            // Mostramos el progressDialog
+            progressDialog.setMessage("Procesando productos...");
+            progressDialog.show();
+
+            StringRequest stringRequestBajarProductos = new StringRequest(Request.Method.POST, apiBajarDatos,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String serverResponse) {
@@ -770,7 +941,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 Toast.makeText(getApplicationContext(), "Productos actualizados", Toast.LENGTH_SHORT).show();
 
-
+                                progressDialog.dismiss();
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
@@ -802,8 +973,12 @@ public class MainActivity extends AppCompatActivity {
 
 
             // Bajar datos de almacenes
-            // creamos la cadena que se enviara al webservice
-            StringRequest stringRequestBajarAlmacenes = new StringRequest(Request.Method.POST, HttpURI,
+
+            // Mostramos el progressDialog
+            progressDialog.setMessage("Procesando almacenes...");
+            progressDialog.show();
+
+            StringRequest stringRequestBajarAlmacenes = new StringRequest(Request.Method.POST, apiBajarDatos,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String serverResponse) {
@@ -898,7 +1073,12 @@ public class MainActivity extends AppCompatActivity {
             requestQueue.add(stringRequestBajarAlmacenes);
 
             // Bajar datos de configuraciones
-            StringRequest stringRequestBajarConfiguraciones = new StringRequest(Request.Method.POST, HttpURI,
+
+            // Mostramos el progressDialog
+            progressDialog.setMessage("Procesando configuraciones...");
+            progressDialog.show();
+
+            StringRequest stringRequestBajarConfiguraciones = new StringRequest(Request.Method.POST, apiBajarDatos,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String serverResponse) {
@@ -1000,9 +1180,13 @@ public class MainActivity extends AppCompatActivity {
             // ejecutamos la cadena
             requestQueue.add(stringRequestBajarConfiguraciones);
 
-
             // Bajar datos de conceptos cuentas por pagar
-            StringRequest stringRequestBajarConceptosCxp = new StringRequest(Request.Method.POST, HttpURI,
+
+            // Mostramos el progressDialog
+            progressDialog.setMessage("Procesando conceptos...");
+            progressDialog.show();
+
+            StringRequest stringRequestBajarConceptosCxp = new StringRequest(Request.Method.POST, apiBajarDatos,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String serverResponse) {

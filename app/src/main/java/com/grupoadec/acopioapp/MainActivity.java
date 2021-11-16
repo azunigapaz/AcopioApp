@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -579,38 +580,56 @@ public class MainActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
 
-            JsonObjectRequest jsonObjectRequestCompras = new JsonObjectRequest
-                    (Request.Method.POST, apiSubirCompras, jsonObjectDocumentoCompras, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
+            // validamos que existan registros por enviar
+            if(jsonArrayTransaccionCompras.length()>0){
+                JsonObjectRequest jsonObjectRequestCompras = new JsonObjectRequest
+                        (Request.Method.POST, apiSubirCompras, jsonObjectDocumentoCompras, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
 
-                            try {
-                                JSONArray jsonArray = response.getJSONArray("mensaje");
+                                try {
+                                    JSONArray jsonArray = response.getJSONArray("mensaje");
 
-                                String respuesta = "";
-                                for(int i = 0; i < jsonArray.length(); i++){
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    String respuesta = "";
+                                    for(int i = 0; i < jsonArray.length(); i++){
+                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                    respuesta = jsonObject.getString("respuestacompras");
+                                        respuesta = jsonObject.getString("respuestacompras");
+                                    }
+
+                                    // actualizamo bandera documento sincronizado
+                                    SQLiteDatabase objectSqliteDatabase = objectSqLiteConexion.getWritableDatabase();
+                                    String [] params = { "0" };
+
+                                    ContentValues contentValuesUpdateEncabezadoCompras = new ContentValues();
+                                    contentValuesUpdateEncabezadoCompras.put(Transacciones.CompraEncabezadoSincronizado, 1);
+                                    objectSqliteDatabase.update(Transacciones.tablacomprasencabezado, contentValuesUpdateEncabezadoCompras, Transacciones.CompraEncabezadoSincronizado + "=?", params);
+
+                                    ContentValues contentValuesUpdatePartidaCompras = new ContentValues();
+                                    contentValuesUpdatePartidaCompras.put(Transacciones.CompraPartidaSincronizado, 1);
+                                    objectSqliteDatabase.update(Transacciones.tablacompraspartida, contentValuesUpdatePartidaCompras, Transacciones.CompraPartidaSincronizado + "=?", params);
+
+                                    objectSqliteDatabase.close();
+
+                                    Toast.makeText(getApplicationContext(),respuesta,Toast.LENGTH_LONG).show();
+                                    progressDialog.dismiss();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
 
-                                Toast.makeText(getApplicationContext(),respuesta,Toast.LENGTH_LONG).show();
-                                progressDialog.dismiss();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
-                            progressDialog.dismiss();
-                        }
-                    });
-
-            requestQueue.add(jsonObjectRequestCompras);
-
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
+                            }
+                        });
+                requestQueue.add(jsonObjectRequestCompras);
+            }else{
+                Toast.makeText(getApplicationContext(),"No existen documentos por enviar",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
@@ -1075,6 +1094,7 @@ public class MainActivity extends AppCompatActivity {
             // Bajar datos de configuraciones
 
             // Mostramos el progressDialog
+
             progressDialog.setMessage("Procesando configuraciones...");
             progressDialog.show();
 
@@ -1292,10 +1312,13 @@ public class MainActivity extends AppCompatActivity {
             requestQueue.add(stringRequestBajarConceptosCxp);
 
 
-        }catch (Exception e){
+        } catch (WindowManager.BadTokenException e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        } catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }
+
     }
 
 }

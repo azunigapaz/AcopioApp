@@ -120,8 +120,8 @@
                 android:layout_height="45dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:paddingLeft="-40dp"
                 android:layout_toRightOf="@+id/btnactivityproductosparaacopio"
+                android:paddingLeft="-40dp"
                 android:src="@drawable/agregaracopio_icono" />
         </RelativeLayout>
 

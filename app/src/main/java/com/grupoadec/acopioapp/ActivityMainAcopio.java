@@ -14,9 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
-import android.webkit.ConsoleMessage;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,17 +22,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dantsu.escposprinter.exceptions.EscPosBarcodeException;
-import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
-import com.dantsu.escposprinter.exceptions.EscPosEncodingException;
-import com.dantsu.escposprinter.exceptions.EscPosParserException;
 import com.grupoadec.acopioapp.Adaptadores.ListaAcopioPartidaTemporalAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
 import com.grupoadec.acopioapp.Models.TablaAcopioPartidaTemporal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import ImpresionESCPOS.ImpresionESCPOS;
 
 public class ActivityMainAcopio extends AppCompatActivity {
     // declaracion de variables
@@ -43,8 +36,7 @@ public class ActivityMainAcopio extends AppCompatActivity {
     ListView acopio_listview;
     EditText subtotalacopio_input,impuestosacopio_input,totalacopio_input;
     SQLiteConexion objectSqLiteConexion;
-    String dispositivoId,LS_OriginalCopia="",LS_TipoImpresora="";
-
+    String dispositivoId;
 
     ArrayList<TablaAcopioPartidaTemporal> objectArrayListTablaAcopioPartidaTemporalLista = new ArrayList<>();
     TablaAcopioPartidaTemporal objectTablaAcopioPartidaTemporalListaAcopioPartidaTemporal = null;
@@ -54,7 +46,6 @@ public class ActivityMainAcopio extends AppCompatActivity {
     String [] objectListItem;
     AlertDialog.Builder objectAlertDialogBuilderOpciones;
     AlertDialog.Builder objectAlertDialogBuilderOpcionesCantidadPrecio;
-    AlertDialog.Builder objectAlertDialogBuilderOpcionesCopiasImprimir;
     AlertDialog.Builder objectAlertDialogBuilderConfirmarGuardarAcopio;
     AlertDialog.Builder objectAlertDialogBuilderConfirmarImprimirAcopio;
 
@@ -106,7 +97,6 @@ public class ActivityMainAcopio extends AppCompatActivity {
             objectAlertDialogBuilderOpcionesCantidadPrecio = new AlertDialog.Builder(this);
             objectAlertDialogBuilderConfirmarGuardarAcopio = new AlertDialog.Builder(this);
             objectAlertDialogBuilderConfirmarImprimirAcopio = new AlertDialog.Builder(this);
-            objectAlertDialogBuilderOpcionesCopiasImprimir= new AlertDialog.Builder(this);
 
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
             dispositivoId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -332,15 +322,11 @@ public class ActivityMainAcopio extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int id) {
                                             GuardarAcopio();
 
-                                            final EditText cantidadInput = new EditText(getApplicationContext());
-                                            cantidadInput.setInputType(InputType.TYPE_CLASS_PHONE);
-                                            cantidadInput.setText("2");
-
-                                            objectAlertDialogBuilderConfirmarImprimirAcopio.setMessage("Desea imprimir el Recibo No. " + textViewNoReciboAcopio.getText() + " del productor, " + textViewProveedorAcopio.getText()+"\n\n"+"Ingrese las copias a imprimir")
-                                                    .setView(cantidadInput)
+                                            objectAlertDialogBuilderConfirmarImprimirAcopio.setMessage("Desea imprimir el Recibo No. " + textViewNoReciboAcopio.getText() + " del productor, " + textViewProveedorAcopio.getText())
                                                     .setCancelable(false)
                                                     .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
+                                                            ImprimirReciboAcopio();
 
                                                             Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewProveedoresSelect.class);
 
@@ -360,17 +346,6 @@ public class ActivityMainAcopio extends AppCompatActivity {
 
                                                             startActivity(objectIntent);
                                                             finish();
-                                                            try {
-                                                                ImprimirReciboAcopio(textViewNoReciboAcopio.getText().toString(),cantidadInput.getText().toString());
-                                                            } catch (EscPosConnectionException e) {
-                                                                e.printStackTrace();
-                                                            } catch (EscPosEncodingException e) {
-                                                                e.printStackTrace();
-                                                            } catch (EscPosBarcodeException e) {
-                                                                e.printStackTrace();
-                                                            } catch (EscPosParserException e) {
-                                                                e.printStackTrace();
-                                                            }
                                                         }
                                                     })
                                                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -641,30 +616,8 @@ public class ActivityMainAcopio extends AppCompatActivity {
         }
     }
 
-    private void ImprimirReciboAcopio(String Documento,String CopiasImprimir) throws EscPosConnectionException, EscPosEncodingException, EscPosBarcodeException, EscPosParserException {
-        ImpresionESCPOS LI_Imprimir= new ImpresionESCPOS();
-        SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
-        String ConsultaSql;
-        Cursor objectCursor;
-        Integer Copias=Integer.valueOf(CopiasImprimir.toString());
-
-        ConsultaSql = "SELECT A.CompraEncabezadoDocumento,A.CompraEncabezadoFecha,A.CompraEncabezadoProveedorClave,A.CompraEncabezadoEstado,A.CompraEncabezadoSubTotal,A.CompraEncabezadoImpuesto,A.CompraEncabezadoTotal," +
-                "B.CompraPartidaProductoClave,D.ProductoDescripcion,B.CompraPartidaCantidad,B.CompraPartidaCosto,B.CompraPartidaImpuesto,B.CompraPartidaTotal,"+
-                "C.ProveedorNombre,C.ProveedorRtn,C.ProveedorCalle"+
-                " FROM " + Transacciones.tablacomprasencabezado + " A " +
-                " INNER JOIN "+Transacciones.tablacompraspartida+" B ON B."+Transacciones.CompraPartidaDocumento+"=A."+Transacciones.CompraEncabezadoDocumento+
-                " INNER JOIN "+Transacciones.tablaproveedores+" C ON C."+Transacciones.ProveedorClave+"=A."+Transacciones.CompraEncabezadoProveedorClave+
-                " INNER JOIN "+Transacciones.tablaproductos+" D ON D."+Transacciones.ProductoClave+"=B."+Transacciones.CompraPartidaProductoClave+
-                " WHERE A.CompraEncabezadoDocumento = '" + Documento + "'";
-
-       objectCursor = objectSqLiteDatabase.rawQuery(ConsultaSql,null);
-        if (objectCursor.getCount()!=0){
-                    LI_Imprimir.ImprimirDocumento(objectCursor,"ORIGINAL",Copias);
-
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"No se obtuvo informacion",Toast.LENGTH_SHORT).show();
-        }
+    private void ImprimirReciboAcopio() {
 
     }
+
 }

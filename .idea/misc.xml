@@ -1,30 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-<<<<<<< HEAD
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="..\:/Users/Alejandro/AndroidStudioProjects/AcopioApp/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_agregar_productos_para_acopio.xml" value="0.4" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_configuracion.xml" value="0.264" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_list_view_consulta_acopio.xml" value="0.264" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_list_view_productos_select_para_acopio.xml" value="0.264" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_list_view_proveedores_select.xml" value="0.264" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_login.xml" value="0.1490036231884058" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_main.xml" value="0.17300724637681159" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_main_acopio.xml" value="0.264" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/activity_registro.xml" value="0.264" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/custom_spinner_dialog.xml" value="0.19972826086956522" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/elementos_custom_view_acopiopartidas_temporal.xml" value="0.4" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/elementos_custom_view_proveedores.xml" value="0.4" />
-        <entry key="..\:/Users/Alejandro/Documents/GitHub/AcopioApp/app/src/main/res/layout/elementos_customview_productos.xml" value="0.4" />
-      </map>
-    </option>
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-=======
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
->>>>>>> b64d8ce0ff0c76a15e4dfcc49f4a2f5732814b41
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

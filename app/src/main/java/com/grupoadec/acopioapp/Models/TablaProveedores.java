@@ -10,8 +10,9 @@ public class TablaProveedores {
     private String ProveedorMunicipio;
     private String ProveedorTelefono;
     private Double ProveedorSaldo;
+    private String ProveedorCertificacion;
 
-    public TablaProveedores(String proveedorClave, String proveedorNombre, String proveedorRtn, String proveedorCalle, String proveedorCruzamiento, String proveedorLocalidad, String proveedorMunicipio, String proveedorTelefono, Double proveedorSaldo) {
+    public TablaProveedores(String proveedorClave, String proveedorNombre, String proveedorRtn, String proveedorCalle, String proveedorCruzamiento, String proveedorLocalidad, String proveedorMunicipio, String proveedorTelefono, Double proveedorSaldo, String proveedorCertificacion) {
         ProveedorClave = proveedorClave;
         ProveedorNombre = proveedorNombre;
         ProveedorRtn = proveedorRtn;
@@ -21,6 +22,7 @@ public class TablaProveedores {
         ProveedorMunicipio = proveedorMunicipio;
         ProveedorTelefono = proveedorTelefono;
         ProveedorSaldo = proveedorSaldo;
+        ProveedorCertificacion = proveedorCertificacion;
     }
 
     public TablaProveedores(){};
@@ -60,4 +62,8 @@ public class TablaProveedores {
     public Double getProveedorSaldo() {return ProveedorSaldo;}
 
     public void setProveedorSaldo(Double proveedorSaldo) {ProveedorSaldo = proveedorSaldo;}
+
+    public String getProveedorCertificacion() {return ProveedorCertificacion;}
+
+    public void setProveedorCertificacion(String proveedorCertificacion) {ProveedorCertificacion = proveedorCertificacion;}
 }

@@ -139,14 +139,23 @@ public class MainActivity extends AppCompatActivity {
             btnSubirDatos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SubirDatos();
+                    if(validarConfiguracion.equals(true)){
+                        SubirDatos();
+                    }else{
+                        Toast.makeText(MainActivity.this,"Debe realizar la configuración del sistema", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
 
             btnBajarDatos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    BajarDatos();
+                    if(validarConfiguracion.equals(true)){
+                        BajarDatos();
+                    }else{
+                        Toast.makeText(MainActivity.this,"Debe realizar la configuración del sistema", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -173,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    if(validarConfiguracion = true){
+                    if(validarConfiguracion.equals(true)){
 
                         Spinner selector = new Spinner(MainActivity.this);
                         selector.setLayoutParams(new LinearLayout.LayoutParams(
@@ -309,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
                 validarConfiguracion = true;
             }else{
                 Toast.makeText(getApplicationContext(),"No existe configuración",Toast.LENGTH_SHORT).show();
+                validarConfiguracion = false;
             }
             objectCursor.close();
         }catch (Exception e){
@@ -735,7 +745,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobtenerusuario");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(getApplicationContext(), "Usuarios actualizados", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Usuarios actualizados", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                             }catch (JSONException ex){
                                 ex.printStackTrace();
@@ -785,7 +795,7 @@ public class MainActivity extends AppCompatActivity {
                                 SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
 
                                 Cursor objectCursor;
-                                String lsproveedorClave,lsproveedorNombre,lsproveedorRtn,lsproveedorCalle,lsproveedorCruzamiento,lsproveedorLocalidad,lsproveedorMunicipio,lsproveedorTelefono,lsproveedorSaldo;
+                                String lsproveedorClave,lsproveedorNombre,lsproveedorRtn,lsproveedorCalle,lsproveedorCruzamiento,lsproveedorLocalidad,lsproveedorMunicipio,lsproveedorTelefono,lsproveedorSaldo,lsproveedorCertificacion;
                                 String consultaSql;
 
                                 for(int i = 0; i < objectJsonArrayTablaProveedores.length(); i++){
@@ -799,6 +809,7 @@ public class MainActivity extends AppCompatActivity {
                                     lsproveedorMunicipio = objectJsonProveedores.getString("MUNICIPIO");
                                     lsproveedorTelefono = objectJsonProveedores.getString("TELEFONO");
                                     lsproveedorSaldo = objectJsonProveedores.getString("SALDO");
+                                    lsproveedorCertificacion = objectJsonProveedores.getString("CERTIFICACION");
 
 
                                     consultaSql = "SELECT * FROM tblproveedores WHERE ProveedorClave = '" + lsproveedorClave + "'";
@@ -817,6 +828,7 @@ public class MainActivity extends AppCompatActivity {
                                         objectContentValuesUpdateProveedores.put(Transacciones.ProveedorMunicipio, lsproveedorMunicipio);
                                         objectContentValuesUpdateProveedores.put(Transacciones.ProveedorTelefono, lsproveedorTelefono);
                                         objectContentValuesUpdateProveedores.put(Transacciones.ProveedorSaldo, lsproveedorSaldo);
+                                        objectContentValuesUpdateProveedores.put(Transacciones.ProveedorCertificacion, lsproveedorCertificacion);
 
                                         objectSqLiteDatabase.update(Transacciones.tablaproveedores,objectContentValuesUpdateProveedores,Transacciones.ProveedorClave + "=?", parametroWhere);
 
@@ -832,6 +844,7 @@ public class MainActivity extends AppCompatActivity {
                                         objectContentValuesInsertProveedores.put(Transacciones.ProveedorMunicipio, lsproveedorMunicipio);
                                         objectContentValuesInsertProveedores.put(Transacciones.ProveedorTelefono, lsproveedorTelefono);
                                         objectContentValuesInsertProveedores.put(Transacciones.ProveedorSaldo, lsproveedorSaldo);
+                                        objectContentValuesInsertProveedores.put(Transacciones.ProveedorCertificacion, lsproveedorCertificacion);
 
                                         long checkIfQueryRuns = objectSqLiteDatabase.insert(Transacciones.tablaproveedores, null, objectContentValuesInsertProveedores);
 
@@ -854,7 +867,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobtenerproductores");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(getApplicationContext(), "Productores actualizados", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Productores actualizados", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                             }catch (JSONException ex){
                                 ex.printStackTrace();
@@ -958,7 +971,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobtenerproductos");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(getApplicationContext(), "Productos actualizados", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Productos actualizados", Toast.LENGTH_SHORT).show();
 
                                 progressDialog.dismiss();
                             }catch (JSONException ex){
@@ -1057,7 +1070,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobteneralmacenes");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(getApplicationContext(), "Almacenes actualizados", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Almacenes actualizados", Toast.LENGTH_SHORT).show();
 
                                 // ocultamos el progressDialog
                                 progressDialog.dismiss();
@@ -1166,7 +1179,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobtenerconfiguraciones");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(getApplicationContext(), "Configuración actualizada", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Configuración actualizada", Toast.LENGTH_SHORT).show();
 
                                 // ocultamos el progressDialog
                                 progressDialog.dismiss();
@@ -1277,7 +1290,7 @@ public class MainActivity extends AppCompatActivity {
                                 String mensajeApi = jsonObject.getString("mensajeobtenerconceptoscxp");
                                 Toast.makeText(getApplicationContext(),mensajeApi,Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(getApplicationContext(), "Conceptos de Cuentas por pagar actualizados", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Conceptos de Cuentas por pagar actualizados", Toast.LENGTH_SHORT).show();
 
                                 // ocultamos el progressDialog
                                 progressDialog.dismiss();

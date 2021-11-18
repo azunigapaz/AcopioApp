@@ -1,12 +1,15 @@
 package com.grupoadec.acopioapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.grupoadec.acopioapp.Adaptadores.ListaAcopioPartidaTemporalAdapter;
 import com.grupoadec.acopioapp.Adaptadores.ListaProductoresAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
@@ -35,6 +39,9 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
     ImageView objectImageViewBtnvolveractivitymain;
     ListaProductoresAdapter objectAdapter;
 
+    String [] objectListItem;
+    AlertDialog.Builder objectAlertDialogBuilderOpciones;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +51,8 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
             objectListViewConsultaProveedores = (ListView) findViewById(R.id.acopio_listview);
             objectEditTextBuscarproveedores_input = (EditText) findViewById(R.id.buscarproveedores_input);
             objectImageViewBtnvolveractivitymain = (ImageView) findViewById(R.id.btnvolveractivitymain);
+
+            objectAlertDialogBuilderOpciones = new AlertDialog.Builder(this);
 
             // llenamos variables con los datos del putExtra
             String parPeNombres = getIntent().getStringExtra("peNombre");
@@ -100,6 +109,64 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
                 }
             });
 
+            objectListViewConsultaProveedores.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    try {
+                        objectListItem = new String[]{"Consultar recibos"};
+                        objectAlertDialogBuilderOpciones.setTitle("Seleccione un opcion");
+                        objectAlertDialogBuilderOpciones.setSingleChoiceItems(objectListItem, -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if(objectListItem[i] == "Consultar recibos"){
+                                    //Toast.makeText(getApplicationContext(), "Ha dado click en Consultar recibo", Toast.LENGTH_SHORT).show();
+
+                                    TablaProveedores tplc = objectArrayListTablaProveedoresLista.get(position);
+
+                                    Intent objectIntent = new Intent(getApplicationContext(),ActivityListViewConsultaAcopio.class);
+                                    objectIntent.putExtra("iptProveedorClave", tplc.getProveedorClave());
+                                    objectIntent.putExtra("iptProveedorNombre", tplc.getProveedorNombre());
+                                    objectIntent.putExtra("iptProveedorRtn", tplc.getProveedorRtn());
+
+                                    objectIntent.putExtra("iPeNombres", parPeNombres);
+                                    objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                                    objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                                    objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                                    objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                                    objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                                    objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                                    objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                                    objectIntent.putExtra("iPeNuevaFactura", "1");
+
+                                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
+
+                                    startActivity(objectIntent);
+                                    finish();
+
+                                }
+                            }
+                        });
+                        objectAlertDialogBuilderOpciones.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                        objectAlertDialogBuilderOpciones.create();
+                        objectAlertDialogBuilderOpciones.show();
+
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                }
+            });
+
             objectListViewConsultaProveedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -152,6 +219,7 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
                 objectTablaProveedoresListaProveedores.setProveedorMunicipio(objectCursor.getString(6));
                 objectTablaProveedoresListaProveedores.setProveedorTelefono(objectCursor.getString(7));
                 objectTablaProveedoresListaProveedores.setProveedorSaldo(objectCursor.getDouble(8));
+                objectTablaProveedoresListaProveedores.setProveedorCertificacion(objectCursor.getString(9));
 
                 objectArrayListTablaProveedoresLista.add(objectTablaProveedoresListaProveedores);
             }

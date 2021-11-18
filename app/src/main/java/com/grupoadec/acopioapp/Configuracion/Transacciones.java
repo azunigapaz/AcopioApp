@@ -42,11 +42,12 @@ public class Transacciones {
     public static final String ProveedorMunicipio = "ProveedorMunicipio";
     public static final String ProveedorTelefono = "ProveedorTelefono";
     public static final String ProveedorSaldo = "ProveedorSaldo";
+    public static final String ProveedorCertificacion = "ProveedorCertificacion";
 
     // Transacciones DDL(Data Definition Language)
     public static final String CreateTableProveedores = "CREATE TABLE tblproveedores (ProveedorClave VARCHAR(10) PRIMARY KEY," +
             "ProveedorNombre VARCHAR(120), ProveedorRtn VARCHAR(15), ProveedorCalle VARCHAR(80), ProveedorCruzamiento VARCHAR(40)," +
-            "ProveedorLocalidad VARCHAR(50), ProveedorMunicipio VARCHAR(50), ProveedorTelefono VARCHAR(25), ProveedorSaldo DECIMAL(18,6))";
+            "ProveedorLocalidad VARCHAR(50), ProveedorMunicipio VARCHAR(50), ProveedorTelefono VARCHAR(25), ProveedorSaldo DECIMAL(18,6), ProveedorCertificacion VARCHAR(20) )";
 
     public static final String DropTableProveedores = "DROP TABLE IF EXISTS tblproveedores";
 

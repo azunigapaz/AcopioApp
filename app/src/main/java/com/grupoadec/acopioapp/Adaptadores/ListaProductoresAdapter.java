@@ -46,11 +46,13 @@ public class ListaProductoresAdapter extends BaseAdapter {
             TextView textViewProveedorCodigoCvp = (TextView) objectView.findViewById(R.id.textViewProveedorCodigoCvp);
             TextView textViewProveedorRtnCvp = (TextView) objectView.findViewById(R.id.textViewProveedorRtnCvp);
             TextView textViewProveedorDireccionCvp = (TextView) objectView.findViewById(R.id.textViewProveedorDireccionCvp);
+            TextView textViewProveedorCertificacionCvp = (TextView) objectView.findViewById(R.id.textViewProveedorCertificacionCvp);
 
             textViewProveedorNombreCvp.setText(objectArrayListTablaProveedores.get(i).getProveedorNombre());
             textViewProveedorCodigoCvp.setText(objectArrayListTablaProveedores.get(i).getProveedorClave());
             textViewProveedorRtnCvp.setText(objectArrayListTablaProveedores.get(i).getProveedorRtn());
             textViewProveedorDireccionCvp.setText(objectArrayListTablaProveedores.get(i).getProveedorCalle());
+            textViewProveedorCertificacionCvp.setText(objectArrayListTablaProveedores.get(i).getProveedorCertificacion());
 
         }catch (Exception e){
             Toast.makeText(objectContext, e.getMessage(), Toast.LENGTH_SHORT).show();

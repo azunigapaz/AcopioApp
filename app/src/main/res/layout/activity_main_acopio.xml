@@ -101,27 +101,31 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="90dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="100dp">
+            android:layout_marginRight="90dp">
 
             <ImageView
                 android:id="@+id/btnactivityproductosparaacopio"
-                android:layout_width="100dp"
+                android:layout_width="70dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:paddingRight="-20dp"
                 android:src="@drawable/buscaracopio_icono" />
 
             <ImageView
-                android:id="@+id/btnguardaracopio"
-                android:layout_width="100dp"
-                android:layout_height="45dp"
+                android:id="@+id/btnactivityphotoacopio"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/btnactivityproductosparaacopio"
-                android:paddingLeft="-40dp"
+                android:src="@drawable/camara_icono" />
+
+            <ImageView
+                android:id="@+id/btnguardaracopio"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/btnactivityphotoacopio"
                 android:src="@drawable/agregaracopio_icono" />
         </RelativeLayout>
 
@@ -245,6 +249,86 @@
                 android:textSize="15dp" />
         </RelativeLayout>
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="-5dp"
+            android:src="@drawable/hr_image"/>
 
+        <!-- LONGITUD -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp">
+
+            <EditText
+                android:id="@+id/longitudacopio_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/txtlongitudacopio"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="Longitud"
+                android:inputType="none"
+                android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:textAlignment="textEnd"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtlongitudacopio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/poppins_medium"
+                android:maxLines="1"
+                android:text="LONGITUD:"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+        </RelativeLayout>
+
+        <!-- LATITUD -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp">
+
+            <EditText
+                android:id="@+id/latitudacopio_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/txtlatitudacopio"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="Latitud"
+                android:inputType="none"
+                android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:textAlignment="textEnd"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtlatitudacopio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/poppins_medium"
+                android:maxLines="1"
+                android:text="LATITUD:"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

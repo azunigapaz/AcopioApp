@@ -73,4 +73,23 @@ public class ListaAcopiosAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return 0;
     }
+
+    public void filtrarDocumento(final CharSequence txtBuscar) {
+        int longitud = txtBuscar.length();
+        if (longitud > 0) {
+            objectArrayListTablaConsultaAcopio.clear();
+            for(int i = 0; i < objectArrayListTablaConsultaAcopioOriginal.size(); i++){
+                if(objectArrayListTablaConsultaAcopioOriginal.get(i).getAcopioDocumento().toLowerCase().contains(txtBuscar.toString().toLowerCase())){
+                    objectArrayListTablaConsultaAcopio.add(objectArrayListTablaConsultaAcopioOriginal.get(i));
+                }
+            }
+            notifyDataSetChanged();
+        }else{
+            objectArrayListTablaConsultaAcopio.clear();
+            objectArrayListTablaConsultaAcopio.addAll(objectArrayListTablaConsultaAcopioOriginal);
+            notifyDataSetChanged();
+        }
+    }
+
 }
+

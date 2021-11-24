@@ -60,7 +60,7 @@ public class ImpresionESCPOS {
                 "[L]\n"+
                 "[L]\n"+
               "[L]<b>______________________________</b>\n"+
-                "[L]RECIBIDO POR\n"+
+                "[L]ENTREGADO POR\n"+
               "[L]\n"+
               "[L]\n"+
               "[L]<b>______________________________</b>\n"+

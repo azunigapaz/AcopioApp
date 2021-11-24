@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/textViewProveedorCertificacionCvp"
-        android:layout_width="147dp"
+        android:layout_width="156dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -50,38 +50,39 @@
 
     <TextView
         android:id="@+id/textViewProveedorNombreCvp"
-        android:layout_width="0dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="150dp"
+        android:layout_width="264dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="6dp"
         android:layout_marginEnd="20dp"
         android:text="TextView"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewProveedorCodigoCvp"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:layout_constraintVertical_bias="0.423" />
+        app:layout_constraintVertical_bias="0.333" />
 
     <TextView
         android:id="@+id/textViewProveedorCodigoCvp"
-        android:layout_width="wrap_content"
-        android:layout_height="23dp"
-        android:layout_marginStart="80dp"
+        android:layout_width="54dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="70dp"
         android:text="TextView"
+        android:textAlignment="textStart"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:layout_constraintVertical_bias="0.495" />
+        app:layout_constraintVertical_bias="0.375" />
 
     <TextView
         android:id="@+id/textViewProveedorRtnCvp"
         android:layout_width="145dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="70dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +92,7 @@
         android:id="@+id/textViewProveedorDireccionCvp"
         android:layout_width="0dp"
         android:layout_height="18dp"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="70dp"
         android:layout_marginEnd="20dp"
         android:text="TextView"
         android:textSize="12sp"
@@ -102,8 +103,8 @@
 
     <ImageView
         android:id="@+id/productorparaacopio_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="42dp"
+        android:layout_height="43dp"
         android:layout_centerVertical="true"
         android:src="@drawable/persona_icono"
         app:layout_constraintBottom_toBottomOf="@+id/guideline5"

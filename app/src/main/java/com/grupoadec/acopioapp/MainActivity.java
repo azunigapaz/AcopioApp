@@ -140,7 +140,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(validarConfiguracion.equals(true)){
+
+                        btnSubirDatos.setClickable(false);
+
                         SubirDatos();
+
+                        btnSubirDatos.setClickable(true);
+
                     }else{
                         Toast.makeText(MainActivity.this,"Debe realizar la configuración del sistema", Toast.LENGTH_SHORT).show();
                     }
@@ -152,7 +158,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(validarConfiguracion.equals(true)){
+
+                        btnBajarDatos.setClickable(false);
+
                         BajarDatos();
+
+                        btnBajarDatos.setClickable(true);
+
                     }else{
                         Toast.makeText(MainActivity.this,"Debe realizar la configuración del sistema", Toast.LENGTH_SHORT).show();
                     }
@@ -330,6 +342,8 @@ public class MainActivity extends AppCompatActivity {
     private void SubirDatos() {
         try{
 
+            btnSubirDatos.setClickable(false);
+
             SQLiteDatabase objectSqLiteDatabase;
 
             // subir usuarios
@@ -377,6 +391,7 @@ public class MainActivity extends AppCompatActivity {
                                     }catch (JSONException ex){
                                         ex.printStackTrace();
                                         progressDialog.dismiss();
+                                        btnSubirDatos.setClickable(true);
                                     }
 
                                 }
@@ -384,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // si hay algun error por parte de la libreria Voley
+                            btnSubirDatos.setClickable(true);
                             progressDialog.dismiss();
                             // mostramos el error de la libreria
                             Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
@@ -459,6 +475,7 @@ public class MainActivity extends AppCompatActivity {
                                     }catch (JSONException ex){
                                         ex.printStackTrace();
                                         Toast.makeText(getApplicationContext(),ex.getMessage(),Toast.LENGTH_SHORT).show();
+                                        btnSubirDatos.setClickable(true);
                                     }
 
                                 }
@@ -466,6 +483,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // si hay algun error por parte de la libreria Voley
+                            btnSubirDatos.setClickable(true);
                             progressDialog.dismiss();
                             // mostramos el error de la libreria
                             Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
@@ -558,6 +576,7 @@ public class MainActivity extends AppCompatActivity {
                                 }catch (JSONException e){
                                     e.printStackTrace();
                                     progressDialog.dismiss();
+                                    btnSubirDatos.setClickable(true);
                                 }
                             }
                         }
@@ -572,6 +591,7 @@ public class MainActivity extends AppCompatActivity {
                     }catch (JSONException e){
                         e.printStackTrace();
                         progressDialog.dismiss();
+                        btnSubirDatos.setClickable(true);
                     }
                 }
             }
@@ -588,6 +608,7 @@ public class MainActivity extends AppCompatActivity {
             }catch (JSONException e) {
                 e.printStackTrace();
                 progressDialog.dismiss();
+                btnSubirDatos.setClickable(true);
             }
 
             // validamos que existan registros por enviar
@@ -625,6 +646,7 @@ public class MainActivity extends AppCompatActivity {
                                     progressDialog.dismiss();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                    btnSubirDatos.setClickable(true);
                                 }
 
                             }
@@ -633,6 +655,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
                                 progressDialog.dismiss();
+                                btnSubirDatos.setClickable(true);
                             }
                         });
                 requestQueue.add(jsonObjectRequestCompras);
@@ -643,12 +666,15 @@ public class MainActivity extends AppCompatActivity {
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
+        btnSubirDatos.setClickable(true);
     }
 
     private void BajarDatos() {
         try{
-            // bajar datos de usuarios
 
+            btnBajarDatos.setClickable(false);
+
+            // bajar datos de usuarios
             // Mostramos el progressDialog
             progressDialog.setMessage("Procesando usuarios...");
             progressDialog.show();
@@ -750,6 +776,7 @@ public class MainActivity extends AppCompatActivity {
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
+                                btnBajarDatos.setClickable(true);
                             }
 
                         }
@@ -872,6 +899,7 @@ public class MainActivity extends AppCompatActivity {
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
+                                btnBajarDatos.setClickable(true);
                             }
 
                         }
@@ -977,6 +1005,7 @@ public class MainActivity extends AppCompatActivity {
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
+                                btnBajarDatos.setClickable(true);
                             }
 
                         }
@@ -1078,6 +1107,7 @@ public class MainActivity extends AppCompatActivity {
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
+                                btnBajarDatos.setClickable(true);
                             }
 
                         }
@@ -1086,6 +1116,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     // si hay algun error por parte de la libreria Voley
                     progressDialog.dismiss();
+                    btnBajarDatos.setClickable(true);
                     // mostramos el error de la libreria
                     Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
                 }
@@ -1187,6 +1218,7 @@ public class MainActivity extends AppCompatActivity {
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
+                                btnBajarDatos.setClickable(true);
                             }
 
                         }
@@ -1194,6 +1226,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // si hay algun error por parte de la libreria Voley
+                    btnBajarDatos.setClickable(true);
                     progressDialog.dismiss();
                     // mostramos el error de la libreria
                     Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
@@ -1298,6 +1331,7 @@ public class MainActivity extends AppCompatActivity {
                             }catch (JSONException ex){
                                 ex.printStackTrace();
                                 progressDialog.dismiss();
+                                btnBajarDatos.setClickable(true);
                             }
 
                         }
@@ -1305,6 +1339,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // si hay algun error por parte de la libreria Voley
+                    btnBajarDatos.setClickable(true);
                     progressDialog.dismiss();
                     // mostramos el error de la libreria
                     Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
@@ -1330,6 +1365,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
+            btnBajarDatos.setClickable(true);
         }
 
     }

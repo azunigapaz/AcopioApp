@@ -27,7 +27,7 @@
         app:layout_constraintGuide_begin="66dp" />
 
     <TextView
-        android:id="@+id/textViewDescripcionProductoCvProd"
+        android:id="@+id/textViewDocumentoConsultaAcopio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -42,7 +42,7 @@
         app:layout_constraintVertical_bias="0.508" />
 
     <TextView
-        android:id="@+id/textViewClaveProductoCvProd"
+        android:id="@+id/textViewFechaConsultaAcopio"
         android:layout_width="139dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -53,7 +53,7 @@
         app:layout_constraintVertical_bias="0.477" />
 
     <TextView
-        android:id="@+id/textViewCostoProductoCvProd"
+        android:id="@+id/textViewImporteConsultaAcopio"
         android:layout_width="145dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -61,7 +61,7 @@
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewClaveProductoCvProd"
+        app:layout_constraintStart_toEndOf="@+id/textViewFechaConsultaAcopio"
         app:layout_constraintTop_toTopOf="@+id/guideline11"
         app:layout_constraintVertical_bias="0.477" />
 

@@ -45,7 +45,7 @@ public class ListaProductoresAdapter extends BaseAdapter {
             TextView textViewProveedorNombreCvp = (TextView) objectView.findViewById(R.id.textViewProveedorNombreCvp);
             TextView textViewProveedorCodigoCvp = (TextView) objectView.findViewById(R.id.textViewProveedorCodigoCvp);
             TextView textViewProveedorRtnCvp = (TextView) objectView.findViewById(R.id.textViewProveedorRtnCvp);
-            TextView textViewProveedorDireccionCvp = (TextView) objectView.findViewById(R.id.textViewProveedorDireccionCvp);
+            TextView textViewProveedorDireccionCvp = (TextView) objectView.findViewById(R.id.textViewNombreProductorConsultaAcopio);
             TextView textViewProveedorCertificacionCvp = (TextView) objectView.findViewById(R.id.textViewProveedorCertificacionCvp);
 
             textViewProveedorNombreCvp.setText(objectArrayListTablaProveedores.get(i).getProveedorNombre());

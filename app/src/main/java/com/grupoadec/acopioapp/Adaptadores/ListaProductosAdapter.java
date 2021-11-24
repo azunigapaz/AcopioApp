@@ -40,9 +40,9 @@ public class ListaProductosAdapter extends BaseAdapter {
         final View objectView = objectInflater.inflate(R.layout.elementos_customview_productos,null);
 
         try{
-            TextView textViewDescripcionProductoCvProd = (TextView) objectView.findViewById(R.id.textViewDescripcionProductoCvProd);
-            TextView textViewClaveProductoCvProd = (TextView) objectView.findViewById(R.id.textViewClaveProductoCvProd);
-            TextView textViewCostoProductoCvProd = (TextView) objectView.findViewById(R.id.textViewCostoProductoCvProd);
+            TextView textViewDescripcionProductoCvProd = (TextView) objectView.findViewById(R.id.textViewDocumentoConsultaAcopio);
+            TextView textViewClaveProductoCvProd = (TextView) objectView.findViewById(R.id.textViewFechaConsultaAcopio);
+            TextView textViewCostoProductoCvProd = (TextView) objectView.findViewById(R.id.textViewImporteConsultaAcopio);
 
             textViewDescripcionProductoCvProd.setText(objectArrayListTablaProductos.get(i).getProductoDescripcion());
             textViewClaveProductoCvProd.setText(objectArrayListTablaProductos.get(i).getProductoClave());

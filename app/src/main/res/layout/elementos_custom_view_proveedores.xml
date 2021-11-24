@@ -89,7 +89,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <TextView
-        android:id="@+id/textViewProveedorDireccionCvp"
+        android:id="@+id/textViewNombreProductorConsultaAcopio"
         android:layout_width="0dp"
         android:layout_height="18dp"
         android:layout_marginStart="70dp"

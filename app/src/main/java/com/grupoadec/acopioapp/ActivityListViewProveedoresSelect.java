@@ -9,17 +9,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.grupoadec.acopioapp.Adaptadores.ListaAcopioPartidaTemporalAdapter;
 import com.grupoadec.acopioapp.Adaptadores.ListaProductoresAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
@@ -33,7 +30,6 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
     SQLiteConexion objectSqLiteConexion;
     ListView objectListViewConsultaProveedores;
     ArrayList<TablaProveedores> objectArrayListTablaProveedoresLista = new ArrayList<>();
-    ArrayList<String> objectArrayListStringProveedores;
     TablaProveedores objectTablaProveedoresListaProveedores = null;
     EditText objectEditTextBuscarproveedores_input;
     ImageView objectImageViewBtnvolveractivitymain;

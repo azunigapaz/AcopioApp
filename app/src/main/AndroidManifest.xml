@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AcopioApp"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ActivityListViewPhotosAcopio"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityPhotoAcopio"
+            android:exported="false" />
         <activity
             android:name=".ActivityAgregarProductosParaAcopio"
             android:exported="false" />

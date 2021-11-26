@@ -1,17 +1,23 @@
 package com.grupoadec.acopioapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.text.InputType;
 import android.util.Log;
@@ -28,6 +34,10 @@ import com.dantsu.escposprinter.exceptions.EscPosBarcodeException;
 import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
 import com.dantsu.escposprinter.exceptions.EscPosEncodingException;
 import com.dantsu.escposprinter.exceptions.EscPosParserException;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.grupoadec.acopioapp.Adaptadores.ListaAcopioPartidaTemporalAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
@@ -38,10 +48,11 @@ import ImpresionESCPOS.ImpresionESCPOS;
 
 public class ActivityMainAcopio extends AppCompatActivity {
     // declaracion de variables
-    ImageView btnvolveractivityproductoreslistview,btnactivityproductosparaacopio,btnguardaracopio;
+    public static final int REQUEST_CODE = 1;
+    ImageView btnvolveractivityproductoreslistview,btnactivityproductosparaacopio,btnguardaracopio,btnactivityphotoacopio;
     TextView textViewNoReciboAcopio, textViewProveedorAcopio;
     ListView acopio_listview;
-    EditText subtotalacopio_input,impuestosacopio_input,totalacopio_input;
+    EditText subtotalacopio_input,impuestosacopio_input,totalacopio_input,longitudacopio_input,latitudacopio_input;
     SQLiteConexion objectSqLiteConexion;
     String dispositivoId,LS_OriginalCopia="",LS_TipoImpresora="";
 
@@ -92,6 +103,7 @@ public class ActivityMainAcopio extends AppCompatActivity {
             btnvolveractivityproductoreslistview = (ImageView) findViewById(R.id.btnvolveractivityproductoreslistview);
             btnactivityproductosparaacopio = (ImageView) findViewById(R.id.btnactivityproductosparaacopio);
             btnguardaracopio = (ImageView) findViewById(R.id.btnguardaracopio);
+            btnactivityphotoacopio = (ImageView) findViewById(R.id.btnactivityphotoacopio);
 
             textViewNoReciboAcopio = (TextView) findViewById(R.id.textViewNoReciboAcopio);
             textViewProveedorAcopio = (TextView) findViewById(R.id.textViewProveedorAcopio);
@@ -101,6 +113,11 @@ public class ActivityMainAcopio extends AppCompatActivity {
             subtotalacopio_input = (EditText) findViewById(R.id.subtotalacopio_input);
             impuestosacopio_input = (EditText) findViewById(R.id.impuestosacopio_input);
             totalacopio_input = (EditText) findViewById(R.id.totalacopio_input);
+            longitudacopio_input = (EditText) findViewById(R.id.longitudacopio_input);
+            latitudacopio_input = (EditText) findViewById(R.id.latitudacopio_input);
+
+            longitudacopio_input.setText("0.00");
+            latitudacopio_input.setText("0.00");
 
             objectAlertDialogBuilderOpciones = new AlertDialog.Builder(this);
             objectAlertDialogBuilderOpcionesCantidadPrecio = new AlertDialog.Builder(this);
@@ -118,6 +135,7 @@ public class ActivityMainAcopio extends AppCompatActivity {
             objectSimpleDateFormatFechaHoraDocumento = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             fechaHoraDocumento = objectSimpleDateFormatFechaHoraDocumento.format(objectCalendar.getTime());
 
+            ObtenerCoordendasActual();
             ObtenerNumeroDeRecibo();
 
             // llenamos variables con los datos del putExtra
@@ -321,6 +339,36 @@ public class ActivityMainAcopio extends AppCompatActivity {
                 }
             });
 
+            btnactivityphotoacopio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent objectIntent = new Intent(getApplicationContext(),ActivityPhotoAcopio.class);
+
+                    objectIntent.putExtra("ipeAlmacenClave", parPeAlmacenClave);
+                    objectIntent.putExtra("ipeAlmacenDescripcion", parPeAlmacenDescripcion);
+
+                    objectIntent.putExtra("iptProveedorClave", parPeProveedorClave);
+                    objectIntent.putExtra("iptProveedorNombre", parPeProveedorNombre);
+                    objectIntent.putExtra("iptProveedorRtn", parPeProveedorRtn);
+
+                    objectIntent.putExtra("iPeNombres", parPeNombres);
+                    objectIntent.putExtra("iPeApellidos", parPeApellidos);
+                    objectIntent.putExtra("iPeCorreo", parPeCorreo);
+                    objectIntent.putExtra("iPeAccesoConfiguracion", parPeAccesoConfiguracion);
+                    objectIntent.putExtra("iPeAccesoBajarDatos", parPeAccesoBajarDatos);
+                    objectIntent.putExtra("iPeAccesoSubirDatos", parPeAccesoSubirDatos);
+                    objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
+                    objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
+
+                    objectIntent.putExtra("iPeNuevaFactura", "1");
+
+                    objectIntent.putExtra("ipeNumeroDocumento", textViewNoReciboAcopio.getText());
+
+                    startActivity(objectIntent);
+                    finish();
+                }
+            });
+
             btnguardaracopio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -371,6 +419,7 @@ public class ActivityMainAcopio extends AppCompatActivity {
                                                             } catch (InterruptedException e) {
                                                                 e.printStackTrace();
                                                             }
+
                                                             startActivity(objectIntent);
                                                             finish();
                                                         }
@@ -663,13 +712,64 @@ public class ActivityMainAcopio extends AppCompatActivity {
             objectCursor = objectSqLiteDatabase.rawQuery(ConsultaSql,null);
             if (objectCursor.getCount()!=0){
                 LI_Imprimir.ImprimirDocumento(objectCursor,"ORIGINAL",Copias);
-
             }
             else{
-                Toast.makeText(getApplicationContext(),"No se obtuvo informacion",Toast.LENGTH_SHORT).show();
-            }
+                Toast.makeText(getApplicationContext(),"No se obtuvo informacion",Toast.LENGTH_SHORT).show();            }
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void ObtenerCoordendasActual() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(ActivityMainAcopio.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+        } else {
+
+            getCoordenada();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCoordenada();
+            } else {
+                Toast.makeText(this, "Permiso Denegado ..", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getCoordenada() {
+        try {
+            LocationRequest locationRequest = new LocationRequest();
+            locationRequest.setInterval(10000);
+            locationRequest.setFastestInterval(3000);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                return;
+            }
+            LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                    LocationServices.getFusedLocationProviderClient(ActivityMainAcopio.this).removeLocationUpdates(this);
+                    if (locationResult != null && locationResult.getLocations().size() > 0) {
+                        int latestLocationIndex = locationResult.getLocations().size() - 1;
+                        double latitud = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                        double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                        latitudacopio_input.setText(String.valueOf(latitud));
+                        longitudacopio_input.setText(String.valueOf(longitude));
+                    }
+                }
+
+            }, Looper.myLooper());
+
+        }catch (Exception ex){
+            System.out.println("Error es :" + ex);
         }
     }
 }

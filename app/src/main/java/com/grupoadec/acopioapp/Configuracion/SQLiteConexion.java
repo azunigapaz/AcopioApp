@@ -43,6 +43,7 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         db.execSQL(Transacciones.CreateTableCuentasPorPagarConceptos);
         db.execSQL(Transacciones.CreateTableCuentasPorPagarEncabezado);
         db.execSQL(Transacciones.CreateTableCuentasPorPagarDetalle);
+        db.execSQL(Transacciones.CreateTableFotosAcopio);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         db.execSQL(Transacciones.DropTableCuentasPorPagarConceptos);
         db.execSQL(Transacciones.DropTableCuentasPorPagarEncabezado);
         db.execSQL(Transacciones.DropTableCuentasPorPagarDetalle);
-
+        db.execSQL(Transacciones.DropTableFotosAcopio);
         // Cramos nuevamente las tablas
         onCreate(db);
     }

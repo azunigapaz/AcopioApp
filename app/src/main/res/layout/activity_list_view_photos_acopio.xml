@@ -33,9 +33,10 @@
 
         </FrameLayout>
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvListaFotosAcopio"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="607dp"
             android:padding="10dp"
             android:scrollbarAlwaysDrawVerticalTrack="true" />
 

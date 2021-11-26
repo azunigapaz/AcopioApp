@@ -17,7 +17,7 @@
             android:background="@drawable/cacaoactivity_bg">
 
             <ImageView
-                android:id="@+id/btnvolveractivitymainacopio"
+                android:id="@+id/btnvolveractivityphotomainacopio"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_gravity="left"
@@ -44,6 +44,7 @@
                 android:id="@+id/photoacopio_imageview"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
+                android:onClick="chooseImage"
                 android:padding="10dp"
                 android:src="@drawable/coffee_logo_opacity" />
         </RelativeLayout>
@@ -60,6 +61,7 @@
                 android:layout_width="70dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
+                android:onClick="permisos"
                 android:src="@drawable/addphoto_icono" />
 
             <ImageView
@@ -68,6 +70,7 @@
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/btntomarphotoacopio"
+                android:onClick="storeImage"
                 android:padding="3dp"
                 android:src="@drawable/sdcard_icono" />
 

@@ -17,7 +17,7 @@
             android:background="@drawable/cacaoactivity_bg">
 
             <ImageView
-                android:id="@+id/btnvolveractivitymainacopio"
+                android:id="@+id/btnvolveractivityphotomainacopio"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_gravity="left"
@@ -71,7 +71,7 @@
         <ListView
             android:id="@+id/acopio_listview"
             android:layout_width="match_parent"
-            android:layout_height="330dp"
+            android:layout_height="471dp"
             android:layout_marginTop="10dp"
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:textSize="15dp" />

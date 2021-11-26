@@ -203,4 +203,14 @@ public class Transacciones {
             "CuentasPorPagarDetalleFechaAplicacion DATETIME, CuentasPorPagarDetalleTipoMovimiento VARCHAR(1),CuentasPorPagarDetalleSigno INTEGER, CuentasPorPagarDetalleFechaHora DATETIME, CuentasPorPagarDetalleSincronizado INTEGER)";
     public final static String DropTableCuentasPorPagarDetalle = "DROP TABLE IF EXISTS tblcuentasporpagardetalle";
 
+    public static final String tablafotosacopio = "tblfotosacopio";
+    // campos de la tabla fotos acopio
+    public static final String FotosAcopioId = "FotosAcopioId";
+    public static final String FotosAcopioDocumento = "FotosAcopioDocumento";
+    public static final String FotosAcopioImagen = "FotosAcopioImagen";
+    // ddl fotos acopio
+    public static final String CreateTableFotosAcopio = "CREATE TABLE tblfotosacopio (FotosAcopioId INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "FotosAcopioDocumento VARCHAR(20), FotosAcopioImagen BLOB)";
+    public static final String DropTableFotosAcopio = "DROP TABLE IF EXISTS tblfotosacopio";
+
 }

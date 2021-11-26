@@ -18,7 +18,7 @@ import java.time.chrono.ThaiBuddhistEra;
 //"[C]<font size='tall'>"+dataItems.getString(dataItems.getColumnIndex("CompraEncabezadoDocumento"))+"</font>\n";
 public class ImpresionESCPOS {
     public void ImprimirDocumento(Cursor dataItems,String OriginalCopia,Integer Copias) throws EscPosConnectionException, EscPosParserException, EscPosEncodingException, EscPosBarcodeException, InterruptedException {
-        Log.i("Imprimir","Si llego aqui");
+        //Log.i("Imprimir","Si llego aqui");
         float LF_TotalSubtotal=0,LF_TotalImpuesto=0,LF_TotalTotal=0;
         String ComandoImprimir="";
 
@@ -37,7 +37,7 @@ public class ImpresionESCPOS {
                 "[L]<b>Direccion Productor:"+dataItems.getString(dataItems.getColumnIndex("ProveedorCalle")).trim()+"</b>\n"+
                 "[L]<b>------------------------------------------------<b>\n"+
                 "[C]<b>Descripcion<b>\n"+
-                "[L]<b>Cantidad[C]Precio[R]Total<b>\n"+
+                "[L]<b>Cantidad Lbs[C]Precio[R]Total Lps<b>\n"+
                 "[L]<b>------------------------------------------------<b>\n";
 
         for(dataItems.moveToFirst(); !dataItems.isAfterLast(); dataItems.moveToNext())

@@ -25,17 +25,13 @@ import com.dantsu.escposprinter.exceptions.EscPosConnectionException;
 import com.dantsu.escposprinter.exceptions.EscPosEncodingException;
 import com.dantsu.escposprinter.exceptions.EscPosParserException;
 import com.grupoadec.acopioapp.Adaptadores.ListaAcopiosAdapter;
-import com.grupoadec.acopioapp.Adaptadores.ListaProductoresAdapter;
 import com.grupoadec.acopioapp.Configuracion.SQLiteConexion;
 import com.grupoadec.acopioapp.Configuracion.Transacciones;
 import com.grupoadec.acopioapp.Models.TablaConsultaAcopio;
-import com.grupoadec.acopioapp.Models.TablaProveedores;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
 
 import ImpresionESCPOS.ImpresionESCPOS;
 
@@ -75,7 +71,7 @@ public class ActivityListViewConsultaAcopio extends AppCompatActivity {
 
         try{
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase, null, 1);
-            btnvolveractivitymainacopio = (ImageView) findViewById(R.id.btnvolveractivitymainacopio);
+            btnvolveractivitymainacopio = (ImageView) findViewById(R.id.btnvolveractivityphotomainacopio);
             acopio_listview = (ListView) findViewById(R.id.acopio_listview);
             consultaracopios_input = (EditText) findViewById(R.id.consultaracopios_input);
 
@@ -92,8 +88,11 @@ public class ActivityListViewConsultaAcopio extends AppCompatActivity {
             String parPeAccesoConfiguracion = getIntent().getStringExtra("iPeAccesoConfiguracion");
             String parPeAccesoRegistroAcopio = getIntent().getStringExtra("iPeAccesoRegistroAcopio");
             String parPeAccesoRegistroProductores = getIntent().getStringExtra("iPeAccesoRegistroProductores");
-            String parPeValidacionNuevaFactura = getIntent().getStringExtra("iPeNuevaFactura");
 
+            String parPeAlmacenClave = getIntent().getStringExtra("ipeAlmacenClave");
+            String parPeAlmacenDescripcion = getIntent().getStringExtra("ipeAlmacenDescripcion");
+
+            String parPeValidacionNuevaFactura = getIntent().getStringExtra("iPeNuevaFactura");
             parPeProveedorClave = getIntent().getStringExtra("iptProveedorClave");
 
             objectCalendar = Calendar.getInstance();

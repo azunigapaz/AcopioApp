@@ -142,7 +142,7 @@ public class ActivityPhotoAcopio extends AppCompatActivity {
                     objectIntent.putExtra("iPeAccesoRegistroProductores", parPeAccesoRegistroProductores);
                     objectIntent.putExtra("iPeAccesoRegistroAcopio", parPeAccesoRegistroAcopio);
 
-                    objectIntent.putExtra("iPeNuevaFactura", "1");
+                    objectIntent.putExtra("iPeNuevaFactura", "0");
 
                     objectIntent.putExtra("ipeNumeroDocumento", parPeNumeroDocumento);
 
@@ -214,7 +214,7 @@ public class ActivityPhotoAcopio extends AppCompatActivity {
                 Bitmap imageToStoreBitmap=imageToStore;
 
                 objectByteArrayOutputStream=new ByteArrayOutputStream();
-                imageToStoreBitmap.compress(Bitmap.CompressFormat.JPEG,100,objectByteArrayOutputStream);
+                imageToStoreBitmap.compress(Bitmap.CompressFormat.JPEG,30,objectByteArrayOutputStream);
 
                 imageInBytes=objectByteArrayOutputStream.toByteArray();
 

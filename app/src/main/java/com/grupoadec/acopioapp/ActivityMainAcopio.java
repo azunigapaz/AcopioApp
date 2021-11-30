@@ -162,6 +162,7 @@ public class ActivityMainAcopio extends AppCompatActivity {
 
             if(parPeValidacionNuevaFactura.equals("1")){
                 ElminarProductoAcopioPartidaTemporal();
+                ElminarFotosAcopioNuevaFactura();
             }
 
             ObtenerListaAcopioPartidasTemporal();
@@ -528,6 +529,23 @@ public class ActivityMainAcopio extends AppCompatActivity {
 
         if(objectCursor.moveToNext()){
             db.delete(Transacciones.tablaacopiopartidatmp, null, null);
+            db.close();
+        }
+        objectCursor.close();
+    }
+
+    private void ElminarFotosAcopioNuevaFactura() {
+        SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+        String documentoAcopio = textViewNoReciboAcopio.getText().toString();
+
+        String [] params = { documentoAcopio };
+
+        String wherecond = Transacciones.FotosAcopioDocumento + "=?";
+
+        Cursor objectCursor = db.rawQuery("SELECT * FROM " + Transacciones.tablafotosacopio + " WHERE FotosAcopioDocumento ='"+ documentoAcopio + "'", null);
+
+        if(objectCursor.moveToNext()){
+            db.delete(Transacciones.tablafotosacopio, wherecond, params);
             db.close();
         }
         objectCursor.close();

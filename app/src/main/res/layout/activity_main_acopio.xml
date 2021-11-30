@@ -277,6 +277,7 @@
                 android:maxLines="1"
                 android:paddingLeft="15dp"
                 android:textAlignment="textEnd"
+                android:textColor="@android:color/darker_gray"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -289,7 +290,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:maxLines="1"
                 android:text="LONGITUD:"
-                android:textColor="@color/black"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="15dp" />
         </RelativeLayout>
 
@@ -314,6 +315,7 @@
                 android:maxLines="1"
                 android:paddingLeft="15dp"
                 android:textAlignment="textEnd"
+                android:textColor="@android:color/darker_gray"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -326,7 +328,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:maxLines="1"
                 android:text="LATITUD:"
-                android:textColor="@color/black"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="15dp" />
         </RelativeLayout>
 

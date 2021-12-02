@@ -150,11 +150,11 @@ public class ActivityRegistro extends AppCompatActivity {
                 valores.put(Transacciones.UsuarioCorreo, correoregistro_input.getText().toString());
                 valores.put(Transacciones.UsuarioContrasenia, encriptedPass);
                 valores.put(Transacciones.UsuarioNuevoRegistro, 1);
-                valores.put(Transacciones.UsuarioAccesoConfiguracion, 0);
+                valores.put(Transacciones.UsuarioAccesoConfiguracion, 1);
                 valores.put(Transacciones.UsuarioAccesoBajarDatos, 1);
                 valores.put(Transacciones.UsuarioAccesoSubirDatos, 1);
-                valores.put(Transacciones.UsuarioAccesoRegistroProductores, 0);
-                valores.put(Transacciones.UsuarioAccesoRegistroAcopio, 0);
+                valores.put(Transacciones.UsuarioAccesoRegistroProductores, 1);
+                valores.put(Transacciones.UsuarioAccesoRegistroAcopio, 1);
                 valores.put(Transacciones.UsuarioEstado, 1);
                 valores.put(Transacciones.UsuarioFechaCreacio,formattedDate);
 

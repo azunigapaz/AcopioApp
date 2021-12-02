@@ -166,6 +166,7 @@ public class ActivityConfiguracion extends AppCompatActivity {
 
     private void GuardarConfiguracion() {
         try {
+            String sufijoFolioDocumento = dispositivoId.substring(0,4).toUpperCase();
             SQLiteDatabase objectSqLiteDatabase = objectSqLiteConexion.getWritableDatabase();
             String ConsultaSql = "SELECT * FROM " + Transacciones.tablaconfiguraciones + " WHERE ConfiguracionId = '" + dispositivoId + "'";
 
@@ -183,7 +184,7 @@ public class ActivityConfiguracion extends AppCompatActivity {
             }else{
                 ContentValues objectContentValuesInsertConf = new ContentValues();
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionId, idusuarioconfiguracion_input.getText().toString());
-                objectContentValuesInsertConf.put(Transacciones.ConfiguracionSufijoDocumento, "");
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionSufijoDocumento, sufijoFolioDocumento);
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionUltimoDocumento, ultimodocumentoconfiguracion_input.getText().toString());
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionUrl, urlconfiguracion_input.getText().toString());
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionTipoImpresora, tipoimpresoraconfiguracion_spinner.getSelectedItem().toString());

@@ -51,9 +51,9 @@ public class ActivityAgregarProductosParaAcopio extends AppCompatActivity {
             precioconfiguracion_input = (EditText) findViewById(R.id.precioconfiguracion_input);
 
             // llenamos variables con los datos del putExtra
-            String parPeNombres = getIntent().getStringExtra("peNombre");
-            String parPeApellidos = getIntent().getStringExtra("peApellidos");
-            String parPeCorreo = getIntent().getStringExtra("peCorreo");
+            String parPeNombres = getIntent().getStringExtra("iPeNombres");
+            String parPeApellidos = getIntent().getStringExtra("iPeApellidos");
+            String parPeCorreo = getIntent().getStringExtra("iPeCorreo");
 
             String parPeAccesoBajarDatos = getIntent().getStringExtra("iPeAccesoBajarDatos");
             String parPeAccesoSubirDatos = getIntent().getStringExtra("iPeAccesoSubirDatos");

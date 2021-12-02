@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     String AlmacenClave,AlmacenDescripcion;
 
+    AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
             btnBajarDatos = (ImageButton) findViewById(R.id.btnBajarDatos);
             btnAccesoConfiguracion = (ImageButton) findViewById(R.id.btnConfiguracion);
             btncerrarsesion = (ImageView) findViewById(R.id.btncerrarsesion);
+
+            builder = new AlertDialog.Builder(this);
 
             // inicializamos la conexion
             objectSqLiteConexion = new SQLiteConexion(this, Transacciones.NameDatabase,null,1);
@@ -112,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
 
             // llenamos variables con los datos del putExtra
-            String parPeNombres = getIntent().getStringExtra("peNombre");
-            String parPeApellidos = getIntent().getStringExtra("peApellidos");
-            String parPeCorreo = getIntent().getStringExtra("peCorreo");
+            String parPeNombres = getIntent().getStringExtra("iPeNombres");
+            String parPeApellidos = getIntent().getStringExtra("iPeApellidos");
+            String parPeCorreo = getIntent().getStringExtra("iPeCorreo");
 
             String parPeAccesoBajarDatos = getIntent().getStringExtra("iPeAccesoBajarDatos");
             String parPeAccesoSubirDatos = getIntent().getStringExtra("iPeAccesoSubirDatos");
@@ -277,9 +281,32 @@ public class MainActivity extends AppCompatActivity {
             btncerrarsesion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent objectIntent = new Intent(getApplicationContext(), ActivityLogin.class);
-                    startActivity(objectIntent);
-                    finish();
+                    try{
+                        builder.setMessage(parPeNombres + " " + parPeApellidos + ", desea cerrar su sesión ?")
+                                .setCancelable(false)
+                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        ActualizarSesionConfiguracion();
+
+                                        Intent objectIntent = new Intent(getApplicationContext(), ActivityLogin.class);
+                                        startActivity(objectIntent);
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //  Action for 'NO' Button
+                                        dialog.cancel();
+                                    }
+                                });
+                        //Creating dialog box
+                        AlertDialog alert = builder.create();
+                        //Setting the title manually
+                        alert.setTitle("Alerta");
+                        alert.show();
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -1366,6 +1393,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             btnBajarDatos.setClickable(true);
+        }
+
+    }
+
+    private void ActualizarSesionConfiguracion() {
+        try{
+            SQLiteDatabase db = objectSqLiteConexion.getWritableDatabase();
+
+            String [] params = { dispositivoId };
+
+            ContentValues valores = new ContentValues();
+            valores.put(Transacciones.ConfiguracionInicioSesion, 0);
+            db.update(Transacciones.tablaconfiguraciones, valores, Transacciones.ConfiguracionId + "=?", params);
+
+            db.close();
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
 
     }

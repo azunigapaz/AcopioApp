@@ -68,9 +68,9 @@ public class ActivityConfiguracion extends AppCompatActivity {
             final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             // llenamos variables con los datos del putExtra
-            String parPeNombres = getIntent().getStringExtra("peNombre");
-            String parPeApellidos = getIntent().getStringExtra("peApellidos");
-            String parPeCorreo = getIntent().getStringExtra("peCorreo");
+            String parPeNombres = getIntent().getStringExtra("iPeNombres");
+            String parPeApellidos = getIntent().getStringExtra("iPeApellidos");
+            String parPeCorreo = getIntent().getStringExtra("iPeCorreo");
 
             String parPeAccesoBajarDatos = getIntent().getStringExtra("iPeAccesoBajarDatos");
             String parPeAccesoSubirDatos = getIntent().getStringExtra("iPeAccesoSubirDatos");

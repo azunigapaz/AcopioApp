@@ -84,10 +84,14 @@ public class Transacciones {
     public static final String ConfiguracionUltimoDocumento = "ConfiguracionUltimoDocumento";
     public static final String ConfiguracionUrl = "ConfiguracionUrl";
     public static final String ConfiguracionTipoImpresora = "ConfiguracionTipoImpresora";
+    public static final String ConfiguracionInicioSesion = "ConfiguracionInicioSesion";
+    public static final String ConfiguracionCorreoInicioSesion = "ConfiguracionCorreoInicioSesion";
+    public static final String ConfiguracionContraseniaInicioSesion = "ConfiguracionContraseniaInicioSesion";
 
     // DDL
     public static final String CreateTableConfiguraciones = "CREATE TABLE tblconfiguraciones (ConfiguracionId VARCHAR(120) PRIMARY KEY, ConfiguracionSufijoDocumento VARCHAR(60),"+
-            "ConfiguracionUltimoDocumento INT, ConfiguracionUrl VARCHAR(200), ConfiguracionTipoImpresora VARCHAR(60))";
+            "ConfiguracionUltimoDocumento INT, ConfiguracionUrl VARCHAR(200), ConfiguracionTipoImpresora VARCHAR(60),"+
+            "ConfiguracionInicioSesion INT, ConfiguracionCorreoInicioSesion VARCHAR(120), ConfiguracionContraseniaInicioSesion VARCHAR(120))";
 
     public static final String DropTableConfiguraciones = "DROP TABLE IF EXISTS tblconfiguraciones";
 

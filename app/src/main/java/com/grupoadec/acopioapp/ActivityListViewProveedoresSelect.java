@@ -51,9 +51,9 @@ public class ActivityListViewProveedoresSelect extends AppCompatActivity {
             objectAlertDialogBuilderOpciones = new AlertDialog.Builder(this);
 
             // llenamos variables con los datos del putExtra
-            String parPeNombres = getIntent().getStringExtra("peNombre");
-            String parPeApellidos = getIntent().getStringExtra("peApellidos");
-            String parPeCorreo = getIntent().getStringExtra("peCorreo");
+            String parPeNombres = getIntent().getStringExtra("iPeNombres");
+            String parPeApellidos = getIntent().getStringExtra("iPeApellidos");
+            String parPeCorreo = getIntent().getStringExtra("iPeCorreo");
 
             String parPeAlmacenClave = getIntent().getStringExtra("ipeAlmacenClave");
             String parPeAlmacenDescripcion = getIntent().getStringExtra("ipeAlmacenDescripcion");

@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,8 +52,7 @@ public class ActivityLogin extends AppCompatActivity {
 
     String HttpURI = "http://192.168.68.106/ApiSaeAppAcopio/assets/php/apiusuarios.php";
 
-    String ls_correologin;
-    String ls_passwordlogin;
+    String ls_correologin,ls_passwordlogin,dispositivoId,correoValidacion, passwordValidacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,10 @@ public class ActivityLogin extends AppCompatActivity {
             // inicializamos el progress bar
             progressDialog = new ProgressDialog(this);
 
+            dispositivoId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
+            ValidarSesion();
+            
             // evento click del TextView registro
             txtactivityregistro.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -176,51 +180,136 @@ public class ActivityLogin extends AppCompatActivity {
         }
     }
 
-    private void LoginSqlite() throws NoSuchAlgorithmException {
-        ls_correologin = correologin_input.getText().toString();
-        ls_passwordlogin = passwordlogin_input.getText().toString();
+    private void ValidarSesion() {
 
-        MessageDigest md = MessageDigest.getInstance("SHA1");
-        md.update(ls_passwordlogin.getBytes(), 0 , ls_passwordlogin.length());
-        String encriptedPass = new BigInteger(1, md.digest()).toString(16);
-
-        if(ls_correologin.isEmpty() || ls_passwordlogin.isEmpty()){
-            Toast.makeText(getApplicationContext(),"El correo y password, no pueden estar vacios",Toast.LENGTH_LONG).show();
-        }else{
-            progressDialog.setMessage("Procesando...");
-            progressDialog.show();
+        try{
 
             SQLiteDatabase db = conexion.getReadableDatabase();
+            Cursor objectCursorConfiguracion = db.rawQuery("SELECT * FROM tblconfiguraciones WHERE ConfiguracionId = '" + dispositivoId + "'" , null);
 
-            Cursor objectCursor = db.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioCorreo = '"+ ls_correologin + "' AND UsuarioContrasenia = '" + encriptedPass + "' AND UsuarioEstado = 1" , null);
-            Intent objectIntent=new Intent(getApplicationContext(),MainActivity.class);
+            String configuracionCorreo="", configuracionContrasenia="";
+            Integer configuracionInicioSesion=0;
 
-            if(objectCursor.getCount()!=0){
-                while (objectCursor.moveToNext()){
-                    Toast.makeText(getApplicationContext(),"Bienvenido " + objectCursor.getString(1) + " " + objectCursor.getString(2),Toast.LENGTH_LONG).show();
-                    objectIntent.putExtra("iPeNombres", objectCursor.getString(1));
-                    objectIntent.putExtra("iPeApellidos", objectCursor.getString(2));
-                    objectIntent.putExtra("iPeTelefono", objectCursor.getString(3));
-                    objectIntent.putExtra("iPeCorreo", objectCursor.getString(4));
-                    objectIntent.putExtra("iPeNuevoRegistro", objectCursor.getString(6));
-                    objectIntent.putExtra("iPeAccesoConfiguracion", objectCursor.getString(7));
-                    objectIntent.putExtra("iPeAccesoBajarDatos", objectCursor.getString(8));
-                    objectIntent.putExtra("iPeAccesoSubirDatos", objectCursor.getString(9));
-                    objectIntent.putExtra("iPeAccesoRegistroProductores", objectCursor.getString(10));
-                    objectIntent.putExtra("iPeAccesoRegistroAcopio", objectCursor.getString(11));
+            if(objectCursorConfiguracion.getCount()!=0){
+                while (objectCursorConfiguracion.moveToNext()){
+                    configuracionInicioSesion = objectCursorConfiguracion.getInt(5);
+                    configuracionCorreo = objectCursorConfiguracion.getString(6);
+                    configuracionContrasenia = objectCursorConfiguracion.getString(7);
                 }
 
-                startActivity(objectIntent);
+                if(configuracionInicioSesion.equals(1)){
+                    Cursor objectCursor = db.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioCorreo = '"+ configuracionCorreo + "'" , null);
+                    Intent objectIntent=new Intent(getApplicationContext(),MainActivity.class);
 
-                progressDialog.dismiss();
-                finish();
+                    if(objectCursor.getCount()!=0){
+                        while (objectCursor.moveToNext()){
 
-            }else{
-                Toast.makeText(getApplicationContext(),"El usuario no existe o esta inactivo",Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(),"Bienvenido " + objectCursor.getString(1) + " " + objectCursor.getString(2),Toast.LENGTH_LONG).show();
+                            objectIntent.putExtra("iPeNombres", objectCursor.getString(1));
+                            objectIntent.putExtra("iPeApellidos", objectCursor.getString(2));
+                            objectIntent.putExtra("iPeTelefono", objectCursor.getString(3));
+                            objectIntent.putExtra("iPeCorreo", objectCursor.getString(4));
+                            objectIntent.putExtra("iPeNuevoRegistro", objectCursor.getString(6));
+                            objectIntent.putExtra("iPeAccesoConfiguracion", objectCursor.getString(7));
+                            objectIntent.putExtra("iPeAccesoBajarDatos", objectCursor.getString(8));
+                            objectIntent.putExtra("iPeAccesoSubirDatos", objectCursor.getString(9));
+                            objectIntent.putExtra("iPeAccesoRegistroProductores", objectCursor.getString(10));
+                            objectIntent.putExtra("iPeAccesoRegistroAcopio", objectCursor.getString(11));
+                        }
+
+                        startActivity(objectIntent);
+
+                        finish();
+
+                    }else{
+                        Toast.makeText(getApplicationContext(),"El usuario no existe o esta inactivo",Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                    }
+                    objectCursor.close();
+                }
             }
+            objectCursorConfiguracion.close();
 
+
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    private void LoginSqlite() throws NoSuchAlgorithmException {
+        try{
+            ls_correologin = correologin_input.getText().toString();
+            ls_passwordlogin = passwordlogin_input.getText().toString();
+
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            md.update(ls_passwordlogin.getBytes(), 0 , ls_passwordlogin.length());
+            String encriptedPass = new BigInteger(1, md.digest()).toString(16);
+
+            if(ls_correologin.isEmpty() || ls_passwordlogin.isEmpty()){
+                Toast.makeText(getApplicationContext(),"El correo y password, no pueden estar vacios",Toast.LENGTH_LONG).show();
+            }else{
+                progressDialog.setMessage("Procesando...");
+                progressDialog.show();
+
+                SQLiteDatabase db = conexion.getReadableDatabase();
+
+                Cursor objectCursor = db.rawQuery("SELECT * FROM tblusuarios WHERE UsuarioCorreo = '"+ ls_correologin + "' AND UsuarioContrasenia = '" + encriptedPass + "' AND UsuarioEstado = 1" , null);
+                Intent objectIntent=new Intent(getApplicationContext(),MainActivity.class);
+
+                if(objectCursor.getCount()!=0){
+                    while (objectCursor.moveToNext()){
+                        correoValidacion = objectCursor.getString(4);
+                        passwordValidacion = objectCursor.getString(5);
+
+                        Toast.makeText(getApplicationContext(),"Bienvenido " + objectCursor.getString(1) + " " + objectCursor.getString(2),Toast.LENGTH_LONG).show();
+                        objectIntent.putExtra("iPeNombres", objectCursor.getString(1));
+                        objectIntent.putExtra("iPeApellidos", objectCursor.getString(2));
+                        objectIntent.putExtra("iPeTelefono", objectCursor.getString(3));
+                        objectIntent.putExtra("iPeCorreo", objectCursor.getString(4));
+                        objectIntent.putExtra("iPeNuevoRegistro", objectCursor.getString(6));
+                        objectIntent.putExtra("iPeAccesoConfiguracion", objectCursor.getString(7));
+                        objectIntent.putExtra("iPeAccesoBajarDatos", objectCursor.getString(8));
+                        objectIntent.putExtra("iPeAccesoSubirDatos", objectCursor.getString(9));
+                        objectIntent.putExtra("iPeAccesoRegistroProductores", objectCursor.getString(10));
+                        objectIntent.putExtra("iPeAccesoRegistroAcopio", objectCursor.getString(11));
+                    }
+
+                    ActualizarSesionConfiguracion();
+
+                    startActivity(objectIntent);
+
+                    progressDialog.dismiss();
+                    finish();
+
+                }else{
+                    Toast.makeText(getApplicationContext(),"El usuario no existe o esta inactivo",Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                }
+
+            }
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void ActualizarSesionConfiguracion() {
+        try{
+            SQLiteDatabase db = conexion.getWritableDatabase();
+
+            String [] params = { dispositivoId };
+
+            ContentValues valores = new ContentValues();
+            valores.put(Transacciones.ConfiguracionInicioSesion, 1);
+            valores.put(Transacciones.ConfiguracionCorreoInicioSesion, correoValidacion);
+            valores.put(Transacciones.ConfiguracionContraseniaInicioSesion, passwordValidacion);
+            db.update(Transacciones.tablaconfiguraciones, valores, Transacciones.ConfiguracionId + "=?", params);
+
+            db.close();
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

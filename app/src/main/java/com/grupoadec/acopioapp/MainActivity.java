@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.nfc.cardemulation.OffHostApduService;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     SQLiteConexion objectSqLiteConexion;
 
     String AlmacenClave,AlmacenDescripcion;
+    String parPeCorreo;
 
     AlertDialog.Builder builder;
 
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             // llenamos variables con los datos del putExtra
             String parPeNombres = getIntent().getStringExtra("iPeNombres");
             String parPeApellidos = getIntent().getStringExtra("iPeApellidos");
-            String parPeCorreo = getIntent().getStringExtra("iPeCorreo");
+            parPeCorreo = getIntent().getStringExtra("iPeCorreo");
 
             String parPeAccesoBajarDatos = getIntent().getStringExtra("iPeAccesoBajarDatos");
             String parPeAccesoSubirDatos = getIntent().getStringExtra("iPeAccesoSubirDatos");
@@ -356,6 +358,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 validarConfiguracion = true;
             }else{
+
                 Toast.makeText(getApplicationContext(),"No existe configuración",Toast.LENGTH_SHORT).show();
                 validarConfiguracion = false;
             }
@@ -364,7 +367,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void SubirDatos() {
         try{
@@ -1128,6 +1130,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 //Toast.makeText(getApplicationContext(), "Almacenes actualizados", Toast.LENGTH_SHORT).show();
 
+                                // llenamos el spinner seleccionar almacen
+                                ObtenerListaAlmacenes();
                                 // ocultamos el progressDialog
                                 progressDialog.dismiss();
 

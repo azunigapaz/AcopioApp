@@ -295,17 +295,45 @@ public class ActivityLogin extends AppCompatActivity {
 
     private void ActualizarSesionConfiguracion() {
         try{
-            SQLiteDatabase db = conexion.getWritableDatabase();
+            String sufijoFolioDocumento = dispositivoId.substring(0,4).toUpperCase();
+            SQLiteDatabase objectSqLiteDatabase = conexion.getWritableDatabase();
+            String ConsultaSql = "SELECT * FROM " + Transacciones.tablaconfiguraciones + " WHERE ConfiguracionId = '" + dispositivoId + "'";
 
-            String [] params = { dispositivoId };
+            Cursor objectCursor = objectSqLiteDatabase.rawQuery(ConsultaSql,null);
 
-            ContentValues valores = new ContentValues();
-            valores.put(Transacciones.ConfiguracionInicioSesion, 1);
-            valores.put(Transacciones.ConfiguracionCorreoInicioSesion, correoValidacion);
-            valores.put(Transacciones.ConfiguracionContraseniaInicioSesion, passwordValidacion);
-            db.update(Transacciones.tablaconfiguraciones, valores, Transacciones.ConfiguracionId + "=?", params);
+            if (objectCursor.getCount()!=0){
+                while (objectCursor.moveToNext()){
+                    String [] params = { dispositivoId };
 
-            db.close();
+                    ContentValues valores = new ContentValues();
+                    valores.put(Transacciones.ConfiguracionInicioSesion, 1);
+                    valores.put(Transacciones.ConfiguracionCorreoInicioSesion, correoValidacion);
+                    valores.put(Transacciones.ConfiguracionContraseniaInicioSesion, passwordValidacion);
+                    objectSqLiteDatabase.update(Transacciones.tablaconfiguraciones, valores, Transacciones.ConfiguracionId + "=?", params);
+
+                    objectSqLiteDatabase.close();
+                }
+            }else{
+                ContentValues objectContentValuesInsertConf = new ContentValues();
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionId, dispositivoId);
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionSufijoDocumento, sufijoFolioDocumento);
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionUltimoDocumento, 0);
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionUrl, "http://192.168.68.107/ApiSaeAppAcopio/assets/php/");
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionTipoImpresora, "ESC POS mode");
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionInicioSesion, 1);
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionCorreoInicioSesion, correoValidacion);
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionContraseniaInicioSesion, passwordValidacion);
+
+                Long checkIfQueryRun = objectSqLiteDatabase.insert(Transacciones.tablaconfiguraciones,null,objectContentValuesInsertConf);
+
+                if(checkIfQueryRun != -1){
+                    Toast.makeText(getApplicationContext(),"Configuración actualizada", Toast.LENGTH_SHORT).show();
+                    objectSqLiteDatabase.close();
+                }else{
+                    Toast.makeText(getApplicationContext(),"No se actualizó la configuración", Toast.LENGTH_SHORT).show();
+                }
+            }
+
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }

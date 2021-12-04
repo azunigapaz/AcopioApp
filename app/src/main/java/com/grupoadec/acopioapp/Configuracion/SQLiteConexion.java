@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi;
 
 public class SQLiteConexion extends SQLiteOpenHelper {
 
-
     public SQLiteConexion(@Nullable Context context, @Nullable String dbname, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, dbname, factory, version);
     }

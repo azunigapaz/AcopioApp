@@ -318,7 +318,7 @@ public class ActivityLogin extends AppCompatActivity {
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionId, dispositivoId);
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionSufijoDocumento, sufijoFolioDocumento);
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionUltimoDocumento, 0);
-                objectContentValuesInsertConf.put(Transacciones.ConfiguracionUrl, "http://192.168.68.107/ApiSaeAppAcopio/assets/php/");
+                objectContentValuesInsertConf.put(Transacciones.ConfiguracionUrl, "http://190.92.44.251:8080/ApiAwsAcopio/assets/php/");
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionTipoImpresora, "ESC POS mode");
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionInicioSesion, 1);
                 objectContentValuesInsertConf.put(Transacciones.ConfiguracionCorreoInicioSesion, correoValidacion);

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ActivityMainAcopio">
 
     <LinearLayout
@@ -54,6 +55,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text=" No. Recibo"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15dp" />
 
             <!-- ICON FACTURA -->
@@ -86,6 +89,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text=" Nombre Proveedor"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15dp" />
 
             <!-- ICON PROVEEDOR -->
@@ -160,6 +165,8 @@
                 android:paddingLeft="15dp"
                 android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -197,6 +204,8 @@
                 android:paddingLeft="15dp"
                 android:textAlignment="textEnd"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -233,6 +242,8 @@
                 android:maxLines="1"
                 android:paddingLeft="15dp"
                 android:textAlignment="textEnd"
+                android:textColor="@color/black"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -278,6 +289,7 @@
                 android:paddingLeft="15dp"
                 android:textAlignment="textEnd"
                 android:textColor="@android:color/darker_gray"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -316,6 +328,7 @@
                 android:paddingLeft="15dp"
                 android:textAlignment="textEnd"
                 android:textColor="@android:color/darker_gray"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />

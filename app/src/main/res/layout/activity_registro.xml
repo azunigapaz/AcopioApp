@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ActivityRegistro">
 
     <LinearLayout
@@ -57,7 +58,9 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <!-- ICON -->
@@ -94,7 +97,9 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <!-- ICON -->
@@ -131,7 +136,9 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <!-- ICON -->
@@ -168,7 +175,9 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <!-- ICON -->
@@ -205,7 +214,9 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <!-- ICON -->
@@ -242,7 +253,9 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
+                android:textColorHint="#9e9e9e"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <!-- ICON -->
@@ -269,6 +282,7 @@
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:text="Registrar Usuario"
+            android:textColor="@color/black"
             android:textSize="12sp" />
 
         <TextView

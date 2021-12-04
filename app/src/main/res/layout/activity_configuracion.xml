@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ActivityConfiguracion">
 
     <LinearLayout
@@ -56,6 +57,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <!-- ICON FACTURA -->
@@ -92,6 +95,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <!-- ICON -->
@@ -128,6 +133,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <!-- ICON -->
@@ -161,6 +168,8 @@
                 android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <!-- ICON -->
@@ -197,6 +206,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <!-- ICON -->
@@ -227,6 +238,7 @@
                 android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:textColorHint="#9e9e9e"
                 android:textColor="@color/black"
                 android:textSize="15dp" />
 
@@ -263,6 +275,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <!-- ICON -->
@@ -299,6 +313,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textCursorDrawable="@drawable/cursor_color"
+                android:textColorHint="#9e9e9e"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <ImageView

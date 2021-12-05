@@ -2,7 +2,7 @@ package com.grupoadec.acopioapp.Configuracion;
 
 public class Transacciones {
     // database Name
-    public static final String NameDatabase = "AcopioAppDB";
+    public static final String NameDatabase = "AcopioAppDBA";
 
     // tabla de usuarios
     public static final String tablausuarios = "tblusuarios";

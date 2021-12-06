@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.nfc.cardemulation.OffHostApduService;
 import android.os.Bundle;
 import android.util.Log;
@@ -146,17 +149,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(validarConfiguracion.equals(true)){
-
-                        btnSubirDatos.setClickable(false);
-
-                        SubirDatos();
-
-                        btnSubirDatos.setClickable(true);
-
+                        if(compruebaConexion(getApplicationContext()) == true){
+                            btnSubirDatos.setClickable(false);
+                            SubirDatos();
+                            btnSubirDatos.setClickable(true);
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Compruebe su conexión a internet",Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         Toast.makeText(MainActivity.this,"Debe realizar la configuración del sistema", Toast.LENGTH_SHORT).show();
                     }
-
                 }
             });
 
@@ -164,13 +166,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(validarConfiguracion.equals(true)){
-
-                        btnBajarDatos.setClickable(false);
-
-                        BajarDatos();
-
-                        btnBajarDatos.setClickable(true);
-
+                        if(compruebaConexion(getApplicationContext()) == true){
+                            btnBajarDatos.setClickable(false);
+                            BajarDatos();
+                            btnBajarDatos.setClickable(true);
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Compruebe su conexión a internet",Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         Toast.makeText(MainActivity.this,"Debe realizar la configuración del sistema", Toast.LENGTH_SHORT).show();
                     }
@@ -1416,6 +1418,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public static boolean compruebaConexion(Context context)
+    {
+        boolean connected = false;
+        ConnectivityManager connec = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Recupera todas las redes (tanto móviles como wifi)
+        NetworkInfo[] redes = connec.getAllNetworkInfo();
+
+        for (int i = 0; i < redes.length; i++) {
+            // Si alguna red tiene conexión, se devuelve true
+            if (redes[i].getState() == NetworkInfo.State.CONNECTED) {
+                connected = true;
+            }
+        }
+        return connected;
     }
 
 }

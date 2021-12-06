@@ -81,6 +81,11 @@ public class ActivityRegistro extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int id) {
                                             try {
                                                 AgregarUsuario();
+
+                                                Intent intent = new Intent(getApplicationContext(),ActivityLogin.class);
+                                                startActivity(intent);
+                                                finish();
+
                                             } catch (NoSuchAlgorithmException e) {
                                                 e.printStackTrace();
                                             }
@@ -161,7 +166,7 @@ public class ActivityRegistro extends AppCompatActivity {
                 Long resultado = db.insert(Transacciones.tablausuarios, Transacciones.UsuarioId, valores);
 
                 if(resultado != -1){
-                    Toast.makeText(getApplicationContext(),"Usuario registrado con el id: " + resultado.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Usuario registrado, id: " + resultado.toString(),Toast.LENGTH_SHORT).show();
                     db.close();
                     LimpiarPantalla();
                 }else{
